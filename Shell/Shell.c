@@ -115,9 +115,25 @@ void parseCommand(char ***parsedCommandPtr)
     {
         active = false;
     }
+    else if(strcmp(parsedCommand[0], "make_file") == 0)
+    {
+        makeFile(parsedCommandPtr);
+    }
+    else if(strcmp(parsedCommand[0], "create_directory") == 0)
+    {
+        createDirectory(parsedCommandPtr);
+    }
+    else if(strcmp(parsedCommand[0], "write_file") == 0)
+    {
+        writeFile(parsedCommandPtr);
+    }
+    else if(strcmp(parsedCommand[0], "delete_file") == 0)
+    {
+        deleteFile(parsedCommandPtr);
+    }
     else
     {
-        executeFile(&parsedCommand);
+        executeFile(parsedCommandPtr);
     }
 }
 
@@ -176,6 +192,56 @@ void freeMemory(char ***parsedCommandPtr)
     free(parsedCommand);
 }
 
+int makeFile()
+{
+
+}
+
+int writeFile(char ***parsedCommandPtr)
+{
+    char **parsedCommand = *parsedCommandPtr;
+
+    int counter = 1;
+
+    if(parsedCommand[counter] == '\0')
+    {
+        printf("\'write_file\' requires .\n");
+    }
+    else
+    {
+        //TODO allow multiple string arguements if I get time.
+
+        //TODO create new child process
+        // while(parsedCommand[counter++])
+        // {
+
+        // }
+
+
+    }
+}
+
+int deleteFile(char ***parsedCommandPtr)
+{
+
+}
+
+int makeFile(char ***parsedCommandPtr)
+{
+
+}
+
+int createDirectory(char ***parsedCommandPtr)
+{
+
+}
+
+
+
+
+
+
+
 int main(void)
 {
 
@@ -210,4 +276,5 @@ int main(void)
         }
         
     }
+
 }
