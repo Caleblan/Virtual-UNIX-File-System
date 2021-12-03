@@ -59,4 +59,15 @@ void parseCommand(char ***parsedCommandPtr);
  */
 void freeMemory(char ***parsedCommandPtr);
 
+
+
+int writeFile(char ***parsedCommandPtr);
+
+int deleteFile(char ***parsedCommandPtr);
+
+int makeFile(char ***parsedCommandPtr);
+
+int createDirectory(char ***parsedCommandPtr);
+
+
 #endif
