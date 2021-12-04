@@ -297,7 +297,6 @@ void createDisk(char ***parsedCommandPtr)
 
     //TODO add error checking here.
     diskSize = atoi(parsedCommand[2]);
-    disk2 = disk;
 
     diskBlocks = diskSize / BLOCK_SIZE;
 
@@ -411,6 +410,9 @@ int main(void)
         }
     }
 
-    free(disk2);
+    //Free the emulated disk partition.
+    if(disk2 != NULL){
+        free(disk2);
+    }
 
 }
