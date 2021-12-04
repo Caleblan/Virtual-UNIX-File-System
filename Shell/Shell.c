@@ -211,6 +211,12 @@ void freeMemory(char ***parsedCommandPtr)
  */
 void diskWriteCommand(char ***parsedCommandPtr)
 {
+    if(disk2 == NULL)
+    {
+        printf("No partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
+    
     char** parsedCommand = *parsedCommandPtr;
 
     unsigned int blockAddress;
@@ -234,6 +240,12 @@ void diskWriteCommand(char ***parsedCommandPtr)
 void diskReadCommand(char ***parsedCommandPtr)
 {
  //TODO allow multiple string arguements if I get time.
+
+    if(disk2 == NULL)
+    {
+        printf("No partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
 
     char** parsedCommand = *parsedCommandPtr;
 
