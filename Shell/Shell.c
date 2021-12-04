@@ -246,11 +246,6 @@ void diskReadCommand(char ***parsedCommandPtr)
 }
 
 
-void makeFile(char ***parsedCommandPtr)
-{
- //TODO allow multiple string arguements if I get time.
-}
-
 void writeFile(char ***parsedCommandPtr)
 {
     if(disk2 == NULL)
