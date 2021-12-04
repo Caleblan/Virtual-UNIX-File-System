@@ -4,6 +4,11 @@
 #define MAGIC_NUMBER 0xf0f03410
 #define BLOCKGROUP_SIZE 1024
 
+unsigned int diskSize = 0;
+unsigned int diskBlocks = 0;
+
+char *disk2 = NULL;
+
 /**
  * Reads input from stdin one character at a time and dynamically
  * allocates enough memory to store command. 
