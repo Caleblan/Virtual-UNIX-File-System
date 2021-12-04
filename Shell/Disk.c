@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Disk.h"
+#include "Shell.h"
 
 /**
  * Write to a block located somewhere on a disk.
