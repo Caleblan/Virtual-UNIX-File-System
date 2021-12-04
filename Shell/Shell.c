@@ -116,6 +116,18 @@ void parseCommand(char ***parsedCommandPtr)
     {
         active = false;
     }
+    else if(strcmp(parsedCommand[0], "disk_write") == 0)
+    {
+        diskWriteCommand(parsedCommandPtr);
+    }
+    else if(strcmp(parsedCommand[0], "create_partition") == 0)
+    {
+        diskWriteCommand(parsedCommandPtr);
+    }
+    else if(strcmp(parsedCommand[0], "disk_read") == 0)
+    {
+        diskReadCommand(parsedCommandPtr);
+    }
     else if(strcmp(parsedCommand[0], "make_file") == 0)
     {
         makeFile(parsedCommandPtr);
@@ -197,7 +209,7 @@ void freeMemory(char ***parsedCommandPtr)
  * 
  * @parsedCommandPtr 
  */
-void diskWrite(char ***parsedCommandPtr)
+void diskWriteCommand(char ***parsedCommandPtr)
 {
     char** parsedCommand = *parsedCommandPtr;
 
@@ -219,7 +231,7 @@ void diskWrite(char ***parsedCommandPtr)
     //TODO if args > 3 then return.
 }
 
-void diskRead(char ***parsedCommandPtr)
+void diskReadCommand(char ***parsedCommandPtr)
 {
  //TODO allow multiple string arguements if I get time.
 
@@ -284,7 +296,7 @@ void createDisk(char ***parsedCommandPtr)
     char **parsedCommand = *parsedCommandPtr;
 
     //TODO add error checking here.
-    diskSize = atoi(argsv[1]);
+    diskSize = atoi(parseCommand[2]);
     
     char disk[diskSize] = {};
     disk2 = disk;
