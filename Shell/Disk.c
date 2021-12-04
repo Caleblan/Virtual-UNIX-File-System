@@ -28,7 +28,7 @@ void diskWrite(unsigned int diskLocation, char** blockData)
 
 }
 
-char[] diskRead(unsigned int diskLocation)
+char *diskRead(unsigned int diskLocation)
 {
     //If the addresses location exceeds the addressable blocks.
     if(diskLocation > diskBlocks)
@@ -37,7 +37,7 @@ char[] diskRead(unsigned int diskLocation)
         return;
     }
 
-    char readData[BLOCK_SIZE];
+    char *readData = malloc(BLOCK_SIZE * sizeof(char));
 
     int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
