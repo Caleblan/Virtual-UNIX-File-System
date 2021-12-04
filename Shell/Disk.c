@@ -1,46 +1,5 @@
 #include <stdlib.h>
 #include "Disk.h"
-#include "CFFS.h"
-
-
-int main(int argsc, char** argsv)
-{
-    char* command;
-
-    //If there are no command arguements, then ask person for what size of file system they want.
-    if(argsc == 1)
-    {
-        printf("How big would you like to make your disk (in bytes)?\n");
-
-        char input;
-
-        int length = 0;
-
-        //
-        while ((input = getchar()) != '\n')
-        {
-            command = realloc(command, length + 1);
-            command[length++] = input;
-        }
-
-        //Parse integer and 
-        diskSize = atoi(command);
-        free(command);
-    }
-    else
-    {
-        //TODO add error checking here.
-        diskSize = atoi(argsv[1]);
-    }
-
-    char disk[diskSize] = {};
-    disk2 = disk;
-
-    diskBlocks = diskSize / diskBlocks;
-
-    //Used to store an array of structs.
-    disk = calloc(diskBlocks, sizeof(char));
-}
 
 /**
  * Write to a block located somewhere on a disk.
