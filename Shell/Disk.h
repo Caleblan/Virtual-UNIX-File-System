@@ -5,11 +5,6 @@
 
 #include <stddef.h>
 
-unsigned int diskSize = 0;
-unsigned int diskBlocks = 0;
-
-char *disk2 = NULL;
-
 void diskWrite(unsigned int diskLocation, char** blockData);
 
 char *diskRead(unsigned int diskLocation);
