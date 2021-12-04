@@ -13,14 +13,6 @@ bool errorFound = false;
 //Used to continuously prompt user until stated otherwise.
 bool active = true;
 
-
-static unsigned int diskSize = 0;
-static unsigned int diskBlocks = 0;
-
-static char *disk2 = NULL;
-
-
-
 /**
  * Reads input from stdin one character at a time and dynamically
  * allocates enough memory to store command. 
