@@ -4,6 +4,8 @@
 #define MAGIC_NUMBER 0xf0f03410
 #define BLOCKGROUP_SIZE 1024
 
+#include <stddef.h>
+
 unsigned int diskSize = 0;
 unsigned int diskBlocks = 0;
 
