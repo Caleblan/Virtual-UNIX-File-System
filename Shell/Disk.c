@@ -34,7 +34,7 @@ char *diskRead(unsigned int diskLocation)
     if(diskLocation > diskBlocks)
     {
         printf("Memory location exceeds disk size (MemoryLocation: %d, DiskSize: %d).\n", diskLocation, diskBlocks);
-        return;
+        return NULL;
     }
 
     char *readData = malloc(BLOCK_SIZE * sizeof(char));
@@ -44,7 +44,7 @@ char *diskRead(unsigned int diskLocation)
     int counter = 0;
     
     //Copy data from disk to a buffer
-    for(int i = readLocation * BLOCK_SIZE; i < BLOCK_END; i++)
+    for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         readData[counter++] = disk2[i];
     }
