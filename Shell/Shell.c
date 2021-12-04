@@ -242,7 +242,10 @@ void diskReadCommand(char ***parsedCommandPtr)
     sscanf(parsedCommand[2], "%u", &blockAddress);
     char *block = diskRead(blockAddress);
 
-    printf("'%s' read from disk.\n", block);
+    if(*block != NULL)
+    {
+        printf("'%s' read from disk.\n", block);
+    }
 
     free(block);
 }
@@ -294,14 +297,12 @@ void createDisk(char ***parsedCommandPtr)
 
     //TODO add error checking here.
     diskSize = atoi(parsedCommand[2]);
-    
-    char disk[diskSize] = {};
     disk2 = disk;
 
     diskBlocks = diskSize / BLOCK_SIZE;
 
     //Used to store an array of structs.
-    disk2 = calloc(diskBlocks, sizeof(char));
+    disk2 = calloc(diskSize, sizeof(char));
 }
 
 
