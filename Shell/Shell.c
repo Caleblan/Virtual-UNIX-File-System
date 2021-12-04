@@ -410,7 +410,7 @@ int main(void)
         }
     }
 
-    //Free the emulated disk partition.
+    //Free the emulated disk
     if(disk2 != NULL){
         free(disk2);
     }
