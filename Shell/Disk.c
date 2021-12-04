@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "Disk.h"
 
+unsigned int diskSize = 0;
+unsigned int diskBlocks = 0;
+
+char *disk2 = NULL;
+
 /**
  * Write to a block located somewhere on a disk.
  */
