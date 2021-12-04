@@ -1,8 +1,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#define MAGIC_NUMBER 0xf0f03410;
-#define BLOCKGROUP_SIZE 1024;
+#define MAGIC_NUMBER 0xf0f03410
+#define BLOCKGROUP_SIZE 1024
 
 /**
  * Reads input from stdin one character at a time and dynamically
@@ -64,9 +64,9 @@ void freeMemory(char ***parsedCommandPtr);
 
 
 
-int diskWrite(char ***parsedCommandPtr);
+int diskWriteCommand(char ***parsedCommandPtr);
 
-int diskRead(char ***parsedCommandPtr);
+int diskReadCommand(char ***parsedCommandPtr);
 
 int writeFile(char ***parsedCommandPtr);
 
