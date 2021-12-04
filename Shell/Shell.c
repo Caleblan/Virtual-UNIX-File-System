@@ -330,14 +330,14 @@ int makeFile(char ***parsedCommandPtr)
         {
             //Use "and" operation on bitmap with bitmask.
             //If value is equal to 0, that position is empty and we can use that inode.
-            if(bitmask & bits == 0)
+            if((bitMask & bits) == 0)
             {
                 //Set bit value using bitmask so inode is marked as used.
-                disk2[i] ^= bitmask;
+                disk2[i] ^= bitMask;
                 break;
             }
 
-            bitmask = bitmask >> 1;
+            bitMask = bitMask >> 1;
         }
     }
 }
