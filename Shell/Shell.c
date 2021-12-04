@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Shell.h"
+#include "Disk.h"
 
 bool errorFound = false;
 
@@ -192,13 +193,61 @@ void freeMemory(char ***parsedCommandPtr)
     free(parsedCommand);
 }
 
-int makeFile()
+/**
+ * 
+ * @parsedCommandPtr 
+ */
+void diskWrite(char ***parsedCommandPtr)
 {
+    char** parsedCommand = *parsedCommandPtr;
 
+    unsigned int blockAddress;
+
+    //Checks if data is greater than the block size.
+    if(strlen(parsedCommand[1]) > BLOCK_SIZE)
+    {
+        printf("Inputted data exceeds disk block size (BlockSize: %d).\n", BLOCK_SIZE);
+        return;
+    }
+    //If value
+
+    //TODO check for greater than input.
+    sscanf(parsedCommand[2], "%u", &blockAddress);
+
+    diskWrite(blockAddress, parsedCommand[2]);
+
+    //TODO if args > 3 then return.
 }
 
-int writeFile(char ***parsedCommandPtr)
+void diskRead(char ***parsedCommandPtr)
 {
+ //TODO allow multiple string arguements if I get time.
+
+    char** parsedCommand = *parsedCommandPtr;
+
+    unsigned int blockAddress;
+
+    sscanf(parsedCommand[2], "%u", &blockAddress);
+    char block[] = diskRead(blockAddress);
+
+    printf("'%s' read from disk.\n", block);
+}
+
+
+void makeFile(char ***parsedCommandPtr)
+{
+ //TODO allow multiple string arguements if I get time.
+}
+
+void writeFile(char ***parsedCommandPtr)
+{
+    if(disk2 == NULL)
+    {
+        printf("No partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
+
+
     char **parsedCommand = *parsedCommandPtr;
 
     int counter = 1;
@@ -221,19 +270,95 @@ int writeFile(char ***parsedCommandPtr)
     }
 }
 
-int deleteFile(char ***parsedCommandPtr)
+/**
+ * Creates 
+ */
+void createDisk(char ***parsedCommandPtr)
 {
+    if(disk2 != NULL)
+    {
+        printf("Disk partition has already been created (DiskSize (in bytes): %d, DiskBlocks: %d).\n", diskSize, diskBlocks);
+        return;
+    }
 
+    char **parsedCommand = *parsedCommandPtr;
+
+    //TODO add error checking here.
+    diskSize = atoi(argsv[1]);
+    
+    char disk[diskSize] = {};
+    disk2 = disk;
+
+    diskBlocks = diskSize / diskBlocks;
+
+    //Used to store an array of structs.
+    disk = calloc(diskBlocks, sizeof(char));
+}
+
+
+
+void deleteFile(char ***parsedCommandPtr)
+{
+ //TODO allow multiple string arguements if I get time.
 }
 
 int makeFile(char ***parsedCommandPtr)
 {
+    int BITMAP_START = BLOCK_SIZE * 2;
+    int BITMAP_END = BLOCK_SIZE * 3;
+
+
+    //Search through bitmap until there is an open position
+    for(int i = BITMAP_START; i < BITMAP_END; i++)
+    {
+        char bitMask = 0b10000000;
+        char bits = disk2[i];
+
+        for(int j = sizeof(char); j >= 0; j--)
+        {
+            //Use "and" operation on bitmap with bitmask.
+            //If value is equal to 0, that position is empty and we can use that inode.
+            if(bitmask & bits == 0)
+            {
+                //Set bit value using bitmask so inode is marked as used.
+                disk2[i] ^= bitmask;
+                break;
+            }
+
+            bitmask = bitmask >> 1;
+        }
+    }
+}
+
+/**
+ * Formats disk so a file system
+ */
+void formatDisk()
+{
+    //Split Magic Number (int) into four bytes.
+    disk2[0] = (MAGIC_NUMBER >> 24) & 0xFF;
+    disk2[1] = (MAGIC_NUMBER >> 16) & 0xFF;
+    disk2[2] = (MAGIC_NUMBER >> 8) & 0xFF;
+    disk2[3] = MAGIC_NUMBER & 0xFF;
+ 
+    //Splits the block count (int) into four bytes.
+    disk2[4] = (diskSize >> 24) & 0xFF;
+    disk2[5] = (diskSize >> 16) & 0xFF;
+    disk2[6] = (diskSize >> 8) & 0xFF;
+    disk2[7] = diskSize & 0xFF;
+
+    //Splits the inode count (int) into four bytes.
+    disk2[8] = (diskSize >> 24) & 0xFF;
+    disk2[9] = (diskSize >> 16) & 0xFF;
+    disk2[10] = (diskSize >> 8) & 0xFF;
+    disk2[11] = diskSize & 0xFF;
+
 
 }
 
 int createDirectory(char ***parsedCommandPtr)
 {
-
+ //TODO allow multiple string arguements if I get time.
 }
 
 
@@ -274,7 +399,8 @@ int main(void)
         {
             free(command);
         }
-        
     }
+
+    free(disk2);
 
 }
