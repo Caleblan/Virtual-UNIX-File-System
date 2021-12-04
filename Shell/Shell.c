@@ -122,7 +122,7 @@ void parseCommand(char ***parsedCommandPtr)
     }
     else if(strcmp(parsedCommand[0], "create_partition") == 0)
     {
-        diskWriteCommand(parsedCommandPtr);
+        createDisk(parsedCommandPtr);
     }
     else if(strcmp(parsedCommand[0], "disk_read") == 0)
     {
@@ -213,7 +213,7 @@ void diskWriteCommand(char ***parsedCommandPtr)
 {
     if(disk2 == NULL)
     {
-        printf("No partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
         return;
     }
     
@@ -237,13 +237,14 @@ void diskWriteCommand(char ***parsedCommandPtr)
     //TODO if args > 3 then return.
 }
 
+
 void diskReadCommand(char ***parsedCommandPtr)
 {
  //TODO allow multiple string arguements if I get time.
 
     if(disk2 == NULL)
     {
-        printf("No partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
         return;
     }
 
@@ -267,7 +268,7 @@ void writeFile(char ***parsedCommandPtr)
 {
     if(disk2 == NULL)
     {
-        printf("No partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
         return;
     }
 
