@@ -314,7 +314,7 @@ void deleteFile(char ***parsedCommandPtr)
  //TODO allow multiple string arguements if I get time.
 }
 
-int makeFile(char ***parsedCommandPtr)
+void makeFile(char ***parsedCommandPtr)
 {
     int BITMAP_START = BLOCK_SIZE * 2;
     int BITMAP_END = BLOCK_SIZE * 3;
@@ -368,7 +368,7 @@ void formatDisk()
 
 }
 
-int createDirectory(char ***parsedCommandPtr)
+void createDirectory(char ***parsedCommandPtr)
 {
  //TODO allow multiple string arguements if I get time.
 }
