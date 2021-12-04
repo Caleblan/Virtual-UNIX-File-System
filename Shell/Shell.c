@@ -240,9 +240,11 @@ void diskReadCommand(char ***parsedCommandPtr)
     unsigned int blockAddress;
 
     sscanf(parsedCommand[2], "%u", &blockAddress);
-    char block = diskRead(blockAddress);
+    char *block = diskRead(blockAddress);
 
     printf("'%s' read from disk.\n", block);
+
+    free(block);
 }
 
 
