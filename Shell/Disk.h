@@ -13,3 +13,5 @@ char *disk2 = NULL;
 void diskWrite(unsigned int diskLocation, char** blockData);
 
 char *diskRead(unsigned int diskLocation);
+
+#endif
