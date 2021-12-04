@@ -12,4 +12,4 @@ char *disk2 = NULL;
 
 void diskWrite(unsigned int diskLocation, char** blockData);
 
-void diskRead(unsigned int diskLocation);
+char *diskRead(unsigned int diskLocation);
