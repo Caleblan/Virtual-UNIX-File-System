@@ -309,7 +309,7 @@ void createDisk(char ***parsedCommandPtr)
     char **parsedCommand = *parsedCommandPtr;
 
     //TODO add error checking here.
-    diskSize = atoi(parsedCommand[2]);
+    diskSize = atoi(parsedCommand[1]);
 
     diskBlocks = diskSize / BLOCK_SIZE;
 
