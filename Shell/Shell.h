@@ -64,17 +64,17 @@ void freeMemory(char ***parsedCommandPtr);
 
 
 
-int diskWriteCommand(char ***parsedCommandPtr);
+void diskWriteCommand(char ***parsedCommandPtr);
 
-int diskReadCommand(char ***parsedCommandPtr);
+void diskReadCommand(char ***parsedCommandPtr);
 
-int writeFile(char ***parsedCommandPtr);
+void writeFile(char ***parsedCommandPtr);
 
-int deleteFile(char ***parsedCommandPtr);
+void deleteFile(char ***parsedCommandPtr);
 
-int makeFile(char ***parsedCommandPtr);
+void makeFile(char ***parsedCommandPtr);
 
-int createDirectory(char ***parsedCommandPtr);
+void createDirectory(char ***parsedCommandPtr);
 
 void formatDisk();
 
