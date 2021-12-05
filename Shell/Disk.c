@@ -53,19 +53,19 @@ char *diskRead(unsigned int diskLocation)
 
     int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
-    int counter = 0;
+    // int counter = 0;
     
-    //Copy data from disk to a buffer
-    for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
-    {
-        if(*readData == '\0')
-        {
-            disk2[i] = readData[counter];
-            break;
-        }
+    // //Copy data from disk to a buffer
+    // for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
+    // {
+    //     if(*readData == '\0')
+    //     {
+    //         disk2[i] = readData[counter];
+    //         break;
+    //     }
 
-        disk2[i] = readData[counter++];
-    }
+    //     disk2[i] = readData[counter++];
+    // }
 
     return readData;
 }
