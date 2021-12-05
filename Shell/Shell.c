@@ -244,7 +244,7 @@ void diskWriteCommand(char ***parsedCommandPtr)
     //TODO check for greater than input.
     sscanf(parsedCommand[1], "%u", &blockAddress);
 
-    diskWrite(blockAddress, parsedCommand[2]);
+    diskWrite(blockAddress, &parsedCommand[2]);
 
     printf("'%s' written to disk (Block Location: %d).\n", parsedCommand[2], blockAddress);
 
