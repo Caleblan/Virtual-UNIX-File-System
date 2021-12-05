@@ -316,7 +316,7 @@ void createDisk(char ***parsedCommandPtr)
     //Used to store an array of structs.
     disk2 = calloc(diskSize, sizeof(char));
 
-    printf("Disk partition of size %d bytes has been created (BlockSize: %d, BlockCount: %d).\n", diskSize, diskBlocks);
+    printf("Disk partition of size %d bytes has been created (BlockSize: %d, BlockCount: %d).\n", diskSize, BLOCK_SIZE, diskBlocks);
 }
 
 
