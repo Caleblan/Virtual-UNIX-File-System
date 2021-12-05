@@ -246,6 +246,8 @@ void diskWriteCommand(char ***parsedCommandPtr)
 
     diskWrite(blockAddress, parsedCommand[2]);
 
+    printf("'%s' written to disk (Block Location: %d).\n", parsedCommand[2], blockAddress);
+
     //TODO if args > 3 then return.
 }
 
@@ -269,7 +271,7 @@ void diskReadCommand(char ***parsedCommandPtr)
 
     if(block != NULL)
     {
-        printf("'%s' read from disk.\n", block);
+        printf("'%s' read from disk (Block Location: %d).\n", block, blockAddress);
     }
 
     free(block);
