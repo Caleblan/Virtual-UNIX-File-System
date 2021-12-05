@@ -13,7 +13,7 @@ char *disk2 = NULL;
 void diskWrite(unsigned int diskLocation, char** blockData)
 {
     //If the addresses location exceeds the addressable blocks.
-    if(diskLocation > diskBlocks)
+    if(diskLocation >= diskBlocks)
     {
         printf("Memory location exceeds disk size (MemoryLocation: %d, DiskSize: %d).\n", diskLocation, diskBlocks);
         return;
