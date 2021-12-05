@@ -264,7 +264,7 @@ void diskReadCommand(char ***parsedCommandPtr)
 
     unsigned int blockAddress;
 
-    sscanf(parsedCommand[2], "%u", &blockAddress);
+    sscanf(parsedCommand[1], "%u", &blockAddress);
     char *block = diskRead(/*blockAddress*/ 0);
 
     if(*block != NULL)
