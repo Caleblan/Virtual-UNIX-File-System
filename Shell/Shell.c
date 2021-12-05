@@ -242,9 +242,9 @@ void diskWriteCommand(char ***parsedCommandPtr)
     //If value
 
     //TODO check for greater than input.
-    sscanf(parsedCommand[1], "%u", &blockAddress);
+    // sscanf(parsedCommand[1], "%u", &blockAddress);
 
-    diskWrite(blockAddress, parsedCommand[2]);
+    // diskWrite(blockAddress, parsedCommand[2]);
 
     //TODO if args > 3 then return.
 }
@@ -264,8 +264,8 @@ void diskReadCommand(char ***parsedCommandPtr)
 
     unsigned int blockAddress;
 
-    sscanf(parsedCommand[2], "%u", &blockAddress);
-    char *block = diskRead(blockAddress);
+    // sscanf(parsedCommand[2], "%u", &blockAddress);
+    char *block = diskRead(/*blockAddress*/ 0);
 
     if(*block != NULL)
     {
