@@ -29,7 +29,7 @@ void diskWrite(unsigned int diskLocation, char** blockData)
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         //Don't keep going in the loop if more characters
-        if(*disk2[i] == '\0')
+        if(disk2[i] == '\0')
         {
             disk2[i] = data[counter];
             break;
@@ -58,7 +58,7 @@ char *diskRead(unsigned int diskLocation)
     //Copy data from disk to a buffer
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
-        if(*disk2[i] == '\0')
+        if(disk2[i] == '\0')
         {
             disk2[i] = readData[counter];
             break;
