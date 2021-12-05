@@ -31,11 +31,11 @@ void diskWrite(unsigned int diskLocation, char** blockData)
         //Don't keep going in the loop if more characters
         if(disk2[i] == '\0')
         {
-            readData[counter] = disk2[i];
+            data[counter] = disk2[i];
             break;
         }
 
-        readData[counter++] = disk2[i];
+        data[counter++] = disk2[i];
     }
 
 }
