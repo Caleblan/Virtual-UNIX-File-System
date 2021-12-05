@@ -60,7 +60,7 @@ char *diskRead(unsigned int diskLocation)
     {
         if(*readData == '\0')
         {
-            disk2[i] = data[counter];
+            disk2[i] = readData[counter];
             break;
         }
 
