@@ -272,7 +272,6 @@ void writeFile(char ***parsedCommandPtr)
         return;
     }
 
-
     char **parsedCommand = *parsedCommandPtr;
 
     int counter = 1;
@@ -305,8 +304,20 @@ void createDisk(char ***parsedCommandPtr)
         printf("Disk partition has already been created (DiskSize (in bytes): %d, DiskBlocks: %d).\n", diskSize, diskBlocks);
         return;
     }
-
+    
     char **parsedCommand = *parsedCommandPtr;
+
+    if(parsedCommand[1] == NULL)
+    {
+        printf("Too few arguements. Command should follow form \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
+    else if(parsedCommand[2] != NULL)
+    {
+        printf("Too many arguements. Command should follow form \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
+
 
     //TODO add error checking here.
     diskSize = atoi(parsedCommand[1]);
