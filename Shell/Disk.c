@@ -21,7 +21,7 @@ void diskWrite(unsigned int diskLocation, char** blockData)
 
     printf("I'm Here\n");
 
-    // char* data = *blockData;
+    char* data = *blockData;
 
     
 
