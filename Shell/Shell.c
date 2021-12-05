@@ -144,6 +144,11 @@ void parseCommand(char ***parsedCommandPtr)
     {
         deleteFile(parsedCommandPtr);
     }
+    //Temporary
+      else if(strcmp(parsedCommand[0], "format") == 0)
+    {
+        formatDisk();
+    }
     else
     {
         executeFile(parsedCommandPtr);
@@ -401,8 +406,6 @@ void formatDisk()
     disk2[9] = (diskSize >> 16) & 0xFF;
     disk2[10] = (diskSize >> 8) & 0xFF;
     disk2[11] = diskSize & 0xFF;
-
-
 }
 
 void createDirectory(char ***parsedCommandPtr)
