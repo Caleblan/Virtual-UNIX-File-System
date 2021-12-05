@@ -216,8 +216,20 @@ void diskWriteCommand(char ***parsedCommandPtr)
         printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
         return;
     }
+
     
-    char** parsedCommand = *parsedCommandPtr;
+    char** parsedCommand = *parsedCommandPtr;  
+
+    if(parsedCommand[2] == NULL)
+    {
+        printf("Too few arguements. Command should follow form \'disk_write [unsigned int arguement] [char[128]]\'.\n");
+        return;
+    }
+    else if(parsedCommand[3] != NULL)
+    {
+        printf("Too many arguements. Command should follow form \'disk_write [unsigned int arguement] [char[128]]\'.\n");
+        return;
+    }
 
     unsigned int blockAddress;
 
@@ -230,7 +242,7 @@ void diskWriteCommand(char ***parsedCommandPtr)
     //If value
 
     //TODO check for greater than input.
-    sscanf(parsedCommand[2], "%u", &blockAddress);
+    sscanf(parsedCommand[1], "%u", &blockAddress);
 
     diskWrite(blockAddress, parsedCommand[2]);
 
