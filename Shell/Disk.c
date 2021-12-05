@@ -21,6 +21,8 @@ void diskWrite(unsigned int diskLocation, char** blockData)
 
     char* data = *blockData;
 
+    printf("%s\n", data);
+
     int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
     int counter = 0;
@@ -28,14 +30,14 @@ void diskWrite(unsigned int diskLocation, char** blockData)
     //Copy data from disk to a buffer
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
-        //Don't keep going in the loop if more characters
-        if(disk2[i] == '\0')
-        {
-            data[counter] = disk2[i];
-            break;
-        }
+        // //Don't keep going in the loop if more characters
+        // if(disk2[i] == '\0')
+        // {
+        //     data[counter] = disk2[i];
+        //     break;
+        // }
 
-        data[counter++] = disk2[i];
+        // data[counter++] = disk2[i];
     }
 
 }
