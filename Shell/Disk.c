@@ -56,6 +56,8 @@ char *diskRead(unsigned int diskLocation)
     int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
     int counter = 0;
+
+    printf("%d", diskLocation);
     
     //Copy data from disk to a buffer
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
