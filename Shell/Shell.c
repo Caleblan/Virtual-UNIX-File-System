@@ -439,8 +439,8 @@ void deleteFile(char ***parsedCommandPtr)
  */
 void makeFile(char ***parsedCommandPtr)
 {
-    int BITMAP_START = BLOCK_SIZE * 2;
-    int BITMAP_END = BLOCK_SIZE * 3;
+    // int BITMAP_START = BLOCK_SIZE * 2;
+    // int BITMAP_END = BLOCK_SIZE * 3;
 
     bool availableInode = false;
 
@@ -449,39 +449,39 @@ void makeFile(char ***parsedCommandPtr)
     int index;
 
     //Search through bitmap until there is an open position
-    for(index = BITMAP_START-1; index < BITMAP_END; index++)
+    for(index = 0; index < BLOCK_SIZE; index++)
     {
         char bitMask = 0b10000000;
         char bits = inodeBitampBlock[index];
 
-        // //Go through each bit of the char
-        // for(int j = 7; j >= 0; j--)
-        // {
-        //     //Use "and" operation on bitmap with bitmask.
-        //     //If value is equal to 0, that position is empty and we can use that inode.
-        //     if((bitMask & bits) == 0)
-        //     {
-        //         //Set bit value using bitmask so inode is marked as used.
-        //         inodeBitampBlock[index] ^= bitMask;
-        //         availableInode = true;
-        //         break;
-        //     }
+        //Go through each bit of the char
+        for(int j = 7; j >= 0; j--)
+        {
+            //Use "and" operation on bitmap with bitmask.
+            //If value is equal to 0, that position is empty and we can use that inode.
+            if((bitMask & bits) == 0)
+            {
+                //Set bit value using bitmask so inode is marked as used.
+                inodeBitampBlock[index] ^= bitMask;
+                availableInode = true;
+                break;
+            }
 
-        //     bitMask = bitMask >> 1;
-        // }
+            bitMask = bitMask >> 1;
+        }
     }
 
-    // //If no inode is availble, notify user.
-    // if(!availableInode)
-    // {
-    //     printf("No more inodes available. A file must be deleted before another is added.\n");
-    // }
-    // else
-    // {
-    //     //TODO GET INODE NUMBER.
-    //     diskWrite(0, &inodeBitampBlock);
-    //     printf("Inode at index %d has been created", index);
-    // }
+    //If no inode is availble, notify user.
+    if(!availableInode)
+    {
+        printf("No more inodes available. A file must be deleted before another is added.\n");
+    }
+    else
+    {
+        //TODO GET INODE NUMBER.
+        diskWrite(0, &inodeBitampBlock);
+        printf("Inode at index %d has been created", index);
+    }
 
     free(inodeBitampBlock);
 }
