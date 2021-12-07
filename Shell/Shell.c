@@ -472,7 +472,7 @@ void makeFile(char ***parsedCommandPtr)
     // }
 
     //If no inode is availble, notify user.
-    if(availableInode)
+    if(!availableInode)
     {
         printf("No more inodes available. A file must be deleted before another is added.\n");
     }
