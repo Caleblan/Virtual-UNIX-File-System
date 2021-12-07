@@ -448,12 +448,11 @@ void makeFile(char ***parsedCommandPtr)
 
     int index;
     int j;
-    char bitMask;
+    char bitMask = 0b10000000;
 
     //Search through bitmap until there is an open position
     for(index = 0; index < BLOCK_SIZE; index++)
     {
-        char bitMask = 0b10000000;
         char bits = inodeBitampBlock[index];
 
         printf("Before %d \n", index);
