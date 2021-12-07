@@ -448,28 +448,28 @@ void makeFile(char ***parsedCommandPtr)
 
     int index;
 
-    //Search through bitmap until there is an open position
-    for(index = BITMAP_START-1; index < BITMAP_END; index++)
-    {
-        char bitMask = 0b10000000;
-        char bits = inodeBitampBlock[index];
+    // //Search through bitmap until there is an open position
+    // for(index = BITMAP_START-1; index < BITMAP_END; index++)
+    // {
+    //     char bitMask = 0b10000000;
+    //     char bits = inodeBitampBlock[index];
 
-        //Go through each bit of the char
-        for(int j = 7; j >= 0; j--)
-        {
-            //Use "and" operation on bitmap with bitmask.
-            //If value is equal to 0, that position is empty and we can use that inode.
-            if((bitMask & bits) == 0)
-            {
-                //Set bit value using bitmask so inode is marked as used.
-                inodeBitampBlock[index] ^= bitMask;
-                availableInode = true;
-                break;
-            }
+    //     //Go through each bit of the char
+    //     for(int j = 7; j >= 0; j--)
+    //     {
+    //         //Use "and" operation on bitmap with bitmask.
+    //         //If value is equal to 0, that position is empty and we can use that inode.
+    //         if((bitMask & bits) == 0)
+    //         {
+    //             //Set bit value using bitmask so inode is marked as used.
+    //             inodeBitampBlock[index] ^= bitMask;
+    //             availableInode = true;
+    //             break;
+    //         }
 
-            bitMask = bitMask >> 1;
-        }
-    }
+    //         bitMask = bitMask >> 1;
+    //     }
+    // }
 
     //If no inode is availble, notify user.
     if(availableInode)
