@@ -457,6 +457,8 @@ void makeFile(char ***parsedCommandPtr)
         //Go through each bit of the char
         for(int j = 7; j >= 0; j--)
         {
+            printf("%d : %d\n", index, (bitMask & bits));
+
             //Use "and" operation on bitmap with bitmask.
             //If value is equal to 0, that position is empty and we can use that inode.
             if((bitMask & bits) == 0)
