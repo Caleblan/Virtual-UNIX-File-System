@@ -455,6 +455,8 @@ void makeFile(char ***parsedCommandPtr)
         char bitMask = 0b10000000;
         char bits = inodeBitampBlock[index];
 
+        printf("Before %d \n", index);
+
         //Go through each bit of the char
         for(j = 7; j >= 0; j--)
         {
@@ -463,10 +465,9 @@ void makeFile(char ***parsedCommandPtr)
             //If value is equal to 0, that position is empty and we can use that inode.
             if((bitMask & bits) == 0)
             {
-                printf("Before %d \n", inodeBitampBlock[index]);
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitampBlock[index] ^= bitMask;
-                printf("After %d \n", inodeBitampBlock[index]);
+
                 availableInode = true;
                 break;
             }
@@ -476,7 +477,6 @@ void makeFile(char ***parsedCommandPtr)
 
         if((bitMask & bits) == 0)
         {
-
             break;
         }
     }
