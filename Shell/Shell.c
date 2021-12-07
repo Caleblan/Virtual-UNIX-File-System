@@ -447,6 +447,7 @@ void makeFile(char ***parsedCommandPtr)
     char *inodeBitampBlock = diskRead(1);
 
     int index;
+    int j;
 
     //Search through bitmap until there is an open position
     for(index = 0; index < BLOCK_SIZE; index++)
@@ -455,9 +456,8 @@ void makeFile(char ***parsedCommandPtr)
         char bits = inodeBitampBlock[index];
 
         //Go through each bit of the char
-        for(int j = 7; j >= 0; j--)
+        for(j = 7; j >= 0; j--)
         {
-            
 
             //Use "and" operation on bitmap with bitmask.
             //If value is equal to 0, that position is empty and we can use that inode.
@@ -490,7 +490,7 @@ void makeFile(char ***parsedCommandPtr)
     {
         //TODO GET INODE NUMBER.
         diskWrite(1, &inodeBitampBlock);
-        printf("Inode at index %d has been created", index);
+        printf("Inode at index %d has been created", index + (8-j));
     }
 
     free(inodeBitampBlock);
