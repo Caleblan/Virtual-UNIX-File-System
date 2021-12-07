@@ -431,7 +431,7 @@ void deleteFile(char ***parsedCommandPtr)
 
  
     //TODO allow multiple string arguements if I get time.
-    diskWrite();
+    //diskWrite();
 }
 
 /**
@@ -446,11 +446,13 @@ void makeFile(char ***parsedCommandPtr)
 
     char *inodeBitampBlock = diskRead(1);
 
+    int index;
+
     //Search through bitmap until there is an open position
-    for(int i = BITMAP_START; i < BITMAP_END; i++)
+    for(index = BITMAP_START-1; index < BITMAP_END; i++)
     {
         char bitMask = 0b10000000;
-        char bits = disk2[i];
+        char bits = inodeBitampBlock[index];
 
         //Go through each bit of the char
         for(int j = 7; j >= 0; j--)
@@ -460,7 +462,7 @@ void makeFile(char ***parsedCommandPtr)
             if((bitMask & bits) == 0)
             {
                 //Set bit value using bitmask so inode is marked as used.
-                disk2[i] ^= bitMask;
+                inodeBitampBlock[index] ^= bitMask;
                 availableInode = true;
                 break;
             }
@@ -477,7 +479,8 @@ void makeFile(char ***parsedCommandPtr)
     else
     {
         //TODO GET INODE NUMBER.
-        printf("Inode at index %d has been created.\n");
+        diskWrite(0, &inodeBitampBlock);
+        printf("Inode at index %d has been created", index);
     }
 
     free(inodeBitampBlock);
@@ -510,7 +513,7 @@ void formatDisk()
     metaData[10] = (diskSize >> 8) & 0xFF;
     metaData[11] = diskSize & 0xFF;
 
-    diskWrite(metaData);
+    diskWrite(0, &metaData);
 
 
 
