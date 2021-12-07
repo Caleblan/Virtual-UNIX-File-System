@@ -461,6 +461,8 @@ void makeFile(char ***parsedCommandPtr)
         for(j = 7; j >= 0; j--)
         {
 
+            printf("Inner loop %d \n", (bitMask & bits));
+
             //Use "and" operation on bitmap with bitmask.
             //If value is equal to 0, that position is empty and we can use that inode.
             if((bitMask & bits) == 0)
