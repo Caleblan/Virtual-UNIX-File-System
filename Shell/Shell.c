@@ -478,7 +478,7 @@ void makeFile(char ***parsedCommandPtr)
         }
 
         printf("%d \n", (bitMask & bits));
-        if((bitMask & bits) == 0)
+        if(availableInode)
         {
             break;
         }
