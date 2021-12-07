@@ -463,9 +463,10 @@ void makeFile(char ***parsedCommandPtr)
             //If value is equal to 0, that position is empty and we can use that inode.
             if((bitMask & bits) == 0)
             {
-                printf("Inner Loop %d : %d\n", index, (bitMask & bits));
+                printf("Before %d \n", inodeBitampBlock[index]);
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitampBlock[index] ^= bitMask;
+                printf("After %d \n", inodeBitampBlock[index]);
                 availableInode = true;
                 break;
             }
@@ -475,7 +476,7 @@ void makeFile(char ***parsedCommandPtr)
 
         if((bitMask & bits) == 0)
         {
-            printf("Outer Loop %d : %d\n", index, (bitMask & bits));
+
             break;
         }
     }
