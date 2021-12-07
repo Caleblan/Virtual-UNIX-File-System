@@ -471,6 +471,11 @@ void makeFile(char ***parsedCommandPtr)
 
             bitMask = bitMask >> 1;
         }
+
+        if((bitMask & bits) == 0)
+        {
+            break;
+        }
     }
 
     //If no inode is availble, notify user.
