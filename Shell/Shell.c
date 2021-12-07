@@ -471,17 +471,17 @@ void makeFile(char ***parsedCommandPtr)
         }
     }
 
-    //If no inode is availble, notify user.
-    if(!availableInode)
-    {
-        printf("No more inodes available. A file must be deleted before another is added.\n");
-    }
-    else
-    {
-        //TODO GET INODE NUMBER.
-        diskWrite(0, &inodeBitampBlock);
-        printf("Inode at index %d has been created", index);
-    }
+    // //If no inode is availble, notify user.
+    // if(!availableInode)
+    // {
+    //     printf("No more inodes available. A file must be deleted before another is added.\n");
+    // }
+    // else
+    // {
+    //     //TODO GET INODE NUMBER.
+    //     diskWrite(0, &inodeBitampBlock);
+    //     printf("Inode at index %d has been created", index);
+    // }
 
     free(inodeBitampBlock);
 }
