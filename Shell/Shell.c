@@ -448,12 +448,13 @@ void makeFile(char ***parsedCommandPtr)
 
     int index;
     int j;
-    char bitMask = 0b10000000;
+    char bitMask;
 
     //Search through bitmap until there is an open position
     for(index = 0; index < BLOCK_SIZE; index++)
     {
         char bits = inodeBitampBlock[index];
+        bitMask = 0b10000000;
 
         printf("Before %d \n", index);
 
@@ -469,7 +470,6 @@ void makeFile(char ***parsedCommandPtr)
             {
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitampBlock[index] ^= bitMask;
-                bitMask = 0b10000000;
                 availableInode = true;
                 break;
             }
@@ -493,7 +493,7 @@ void makeFile(char ***parsedCommandPtr)
     {
         //TODO GET INODE NUMBER.
         diskWrite(1, &inodeBitampBlock);
-        printf("Inode at index %d has been created.\n", (index * 8) + (7-j));
+        printf("Inode at index %d has been created.\n", ((index * 8) - 1) + (7-j));
     }
 
     free(inodeBitampBlock);
