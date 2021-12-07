@@ -448,6 +448,7 @@ void makeFile(char ***parsedCommandPtr)
 
     int index;
     int j;
+    char bitMask;
 
     //Search through bitmap until there is an open position
     for(index = 0; index < BLOCK_SIZE; index++)
@@ -467,7 +468,7 @@ void makeFile(char ***parsedCommandPtr)
             {
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitampBlock[index] ^= bitMask;
-
+                bitMask = 0b10000000;
                 availableInode = true;
                 break;
             }
