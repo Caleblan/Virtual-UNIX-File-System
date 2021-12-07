@@ -80,6 +80,7 @@ char **tokenize(char **commandPtr)
             //Used if "" characters are found to make the string a single arguement.
             if (*parsedCommand[parseCommandIndex] == '\"')
             {
+
                 parsedCommand[parseCommandIndex]++;
                 char *temp = strtok(NULL, "\"");
 
@@ -221,8 +222,7 @@ void diskWriteCommand(char ***parsedCommandPtr)
         printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
         return;
     }
-
-    
+  
     char** parsedCommand = *parsedCommandPtr;  
 
     if(parsedCommand[2] == NULL)
@@ -282,7 +282,7 @@ void diskReadCommand(char ***parsedCommandPtr)
     free(block);
 }
 
-
+//TODO ASK IF WRITE TAKES IN AN INODE NUMBER.
 void writeFile(char ***parsedCommandPtr)
 {
     if(disk2 == NULL)
@@ -293,24 +293,47 @@ void writeFile(char ***parsedCommandPtr)
 
     char **parsedCommand = *parsedCommandPtr;
 
-    int counter = 1;
-
-    if(*parsedCommand[counter] == '\0')
+    if(parsedCommand[1] == NULL)
     {
-        printf("\'write_file\' requires .\n");
+        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        return;
     }
-    else
+    else if(parsedCommand[2] != NULL)
     {
-        //TODO allow multiple string arguements if I get time.
-
-        //TODO create new child process
-        // while(parsedCommand[counter++])
-        // {
-
-        // }
-
-
+        printf("Too many arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        return;
     }
+
+    //TODO dataBLock pointers for inode
+
+    //Used only if the string is larger than the BLOCK_SIZE
+    char *newString = parsedCommand[1];
+
+    int counter = 0;
+
+    while(strlen(newString) > BLOCK_SIZE)
+    {
+        counter++;
+
+        //If we run out of direct pointers, create and use an indirect pointer.
+        if(counter > 4)
+        {
+
+            // while()
+            // {
+            //      break;
+            // }
+        }
+
+        //TODO get INODE & adjust file size.
+        //TODO 
+
+        newString += BLOCK_SIZE;
+    }
+
+
+
+
 }
 
 /**
@@ -353,14 +376,75 @@ void createDisk(char ***parsedCommandPtr)
 
 void deleteFile(char ***parsedCommandPtr)
 {
- //TODO allow multiple string arguements if I get time.
+    if(disk2 != NULL)
+    {
+        printf("Disk partition has already been created (DiskSize (in bytes): %d, DiskBlocks: %d).\n", diskSize, diskBlocks);
+        return;
+    }
+    
+    char **parsedCommand = *parsedCommandPtr;
+
+    if(parsedCommand[1] == NULL)
+    {
+        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        return;
+    }
+    else if(parsedCommand[2] != NULL)
+    {
+        printf("Too many arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        return;
+    }
+ 
+    //TODO add error checking here.
+    int inodeIndex = atoi(parsedCommand[1]);
+
+    //Finds inode in bitmap and sets it's value to 0.
+    char* inodeBitmapBlock = diskRead(1);
+    unsigned int charIndex = inodeBitmapBlock[inodeIndex / 8];
+    char setBitMask = 0b01111111 >> (inodeIndex % 8);
+
+    //Checks if the inode is currently allocated or not.
+    char checkBitMask = 0b10000000;
+    for(int i = 0; i < 7; i++)
+    {
+        //If the inode bitmap already says the node is free, return error message to the user.
+        if((checkBitMask & charIndex) == 0)
+        {
+            printf("Inode at index \'%d\' has either not been created or has been deallocted already.\n", inodeIndex);
+            free(inodeBitmapBlock);
+            return;
+        }
+
+        checkBitMask = checkBitMask >> 1;
+    }
+
+    //Set bit value using bitmask so inode is marked as used.
+    inodeBitmapBlock[charIndex] ^= setBitMask;
+    diskWrite(inodeIndex, &inodeBitmapBlock);
+    free(inodeBitmapBlock);
+
+    //Set datablocks in datablock to null.
+    //TODO use if so that if value is greater than, don't go through this.
+    char* inodeBlock = diskRead(2 + inodeIndex);
+
+    char* dataBlockGroup = diskRead(4);
+
+ 
+    //TODO allow multiple string arguements if I get time.
+    diskWrite();
 }
 
+/**
+ * Allocates a free block of data 
+ */
 void makeFile(char ***parsedCommandPtr)
 {
     int BITMAP_START = BLOCK_SIZE * 2;
     int BITMAP_END = BLOCK_SIZE * 3;
 
+    bool availableInode = false;
+
+    char *inodeBitampBlock = diskRead(1);
 
     //Search through bitmap until there is an open position
     for(int i = BITMAP_START; i < BITMAP_END; i++)
@@ -368,7 +452,8 @@ void makeFile(char ***parsedCommandPtr)
         char bitMask = 0b10000000;
         char bits = disk2[i];
 
-        for(int j = sizeof(char); j >= 0; j--)
+        //Go through each bit of the char
+        for(int j = 7; j >= 0; j--)
         {
             //Use "and" operation on bitmap with bitmask.
             //If value is equal to 0, that position is empty and we can use that inode.
@@ -376,41 +461,72 @@ void makeFile(char ***parsedCommandPtr)
             {
                 //Set bit value using bitmask so inode is marked as used.
                 disk2[i] ^= bitMask;
+                availableInode = true;
                 break;
             }
 
             bitMask = bitMask >> 1;
         }
     }
+
+    //If no inode is availble, notify user.
+    if(availableInode)
+    {
+        printf("No more inodes available. A file must be deleted before another is added.\n");
+    }
+    else
+    {
+        //TODO GET INODE NUMBER.
+        printf("Inode at index %d has been created.\n");
+    }
+
+    free(inodeBitampBlock);
 }
+
+
 
 /**
  * Formats disk so a file system
  */
 void formatDisk()
 {
+    char metaData[12];
+
     //Split Magic Number (int) into four bytes.
-    disk2[0] = (MAGIC_NUMBER >> 24) & 0xFF;
-    disk2[1] = (MAGIC_NUMBER >> 16) & 0xFF;
-    disk2[2] = (MAGIC_NUMBER >> 8) & 0xFF;
-    disk2[3] = MAGIC_NUMBER & 0xFF;
+    metaData[0] = (MAGIC_NUMBER >> 24) & 0xFF;
+    metaData[1] = (MAGIC_NUMBER >> 16) & 0xFF;
+    metaData[2] = (MAGIC_NUMBER >> 8) & 0xFF;
+    metaData[3] = MAGIC_NUMBER & 0xFF;
  
     //Splits the block count (int) into four bytes.
-    disk2[4] = (diskSize >> 24) & 0xFF;
-    disk2[5] = (diskSize >> 16) & 0xFF;
-    disk2[6] = (diskSize >> 8) & 0xFF;
-    disk2[7] = diskSize & 0xFF;
+    metaData[4] = (diskSize >> 24) & 0xFF;
+    metaData[5] = (diskSize >> 16) & 0xFF;
+    metaData[6] = (diskSize >> 8) & 0xFF;
+    metaData[7] = diskSize & 0xFF;
 
     //Splits the inode count (int) into four bytes.
-    disk2[8] = (diskSize >> 24) & 0xFF;
-    disk2[9] = (diskSize >> 16) & 0xFF;
-    disk2[10] = (diskSize >> 8) & 0xFF;
-    disk2[11] = diskSize & 0xFF;
+    metaData[8] = (diskSize >> 24) & 0xFF;
+    metaData[9] = (diskSize >> 16) & 0xFF;
+    metaData[10] = (diskSize >> 8) & 0xFF;
+    metaData[11] = diskSize & 0xFF;
+
+    diskWrite(metaData);
+
+
+
+
+
+
+    //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values.
+
+
 }
 
 void createDirectory(char ***parsedCommandPtr)
 {
  //TODO allow multiple string arguements if I get time.
+
+    
 }
 
 
