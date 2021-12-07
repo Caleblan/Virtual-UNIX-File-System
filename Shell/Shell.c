@@ -449,7 +449,7 @@ void makeFile(char ***parsedCommandPtr)
     int index;
 
     //Search through bitmap until there is an open position
-    for(index = BITMAP_START-1; index < BITMAP_END; i++)
+    for(index = BITMAP_START-1; index < BITMAP_END; index++)
     {
         char bitMask = 0b10000000;
         char bits = inodeBitampBlock[index];
