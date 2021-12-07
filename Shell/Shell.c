@@ -493,7 +493,7 @@ void makeFile(char ***parsedCommandPtr)
     {
         //TODO GET INODE NUMBER.
         diskWrite(1, &inodeBitampBlock);
-        printf("Inode at index %d has been created.\n", index + (7-j));
+        printf("Inode at index %d has been created.\n", (index * 8) + (7-j));
     }
 
     free(inodeBitampBlock);
