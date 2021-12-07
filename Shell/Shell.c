@@ -475,6 +475,7 @@ void makeFile(char ***parsedCommandPtr)
             bitMask = bitMask >> 1;
         }
 
+        printf("%d \n", (bitMask & bits));
         if((bitMask & bits) == 0)
         {
             break;
