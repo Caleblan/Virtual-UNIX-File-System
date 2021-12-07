@@ -489,7 +489,7 @@ void makeFile(char ***parsedCommandPtr)
     else
     {
         //TODO GET INODE NUMBER.
-        diskWrite(0, &inodeBitampBlock);
+        diskWrite(1, &inodeBitampBlock);
         printf("Inode at index %d has been created", index);
     }
 
