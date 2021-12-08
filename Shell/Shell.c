@@ -296,7 +296,7 @@ void writeFile(char ***parsedCommandPtr)
 
     char **parsedCommand = *parsedCommandPtr;
 
-    if(parsedCommand[1] == NULL || parsedCommand[2] != NULL)
+    if(parsedCommand[1] == NULL || parsedCommand[2] == NULL)
     {
         printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement] [String]\'.\n");
         return;
