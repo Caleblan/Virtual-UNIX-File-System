@@ -39,11 +39,12 @@ void diskWrite(unsigned int diskLocation, char** blockData)
         //Don't keep going in the loop if more characters
         if(data[counter] == '\0')
         {
+            printf("NULL : %d\n", data[counter]);
             data[counter] = 0;
         }
         else
         {
-            printf("%d\n", data[counter]);
+            printf("NOT NULL: %d\n", data[counter]);
             disk2[i] = data[counter++];
         }
     }
