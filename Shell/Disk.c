@@ -74,7 +74,7 @@ char *diskRead(unsigned int diskLocation)
 
     
 
-    return disk2[BLOCK_SIZE * diskLocation];
+    return &disk2[BLOCK_SIZE * diskLocation];
 }
 
 
