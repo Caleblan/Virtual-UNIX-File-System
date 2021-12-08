@@ -43,6 +43,7 @@ void diskWrite(unsigned int diskLocation, char** blockData)
         }
         else
         {
+            printf("%d\n", data[counter]);
             disk2[i] = data[counter++];
         }
     }
