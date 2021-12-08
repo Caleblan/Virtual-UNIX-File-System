@@ -543,6 +543,11 @@ void formatDisk()
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
 
+    printf("%d.\n", metaData[8] << 24);
+    printf("%d.\n", metaData[9] << 16);
+    printf("%d.\n", metaData[10] << 8);
+    printf("%d.\n", metaData[11]);
+
     char* data = metaData;
 
     diskWrite(0, &data);
