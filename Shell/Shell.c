@@ -125,6 +125,10 @@ void parseCommand(char ***parsedCommandPtr)
     {
         createDisk(parsedCommandPtr);
     }
+    else if(strcmp(parsedCommand[0], "format_disk") == 0)
+    {
+        formatDisk();
+    }
     else if(strcmp(parsedCommand[0], "disk_read") == 0)
     {
         diskReadCommand(parsedCommandPtr);
@@ -439,9 +443,6 @@ void deleteFile(char ***parsedCommandPtr)
  */
 void makeFile(char ***parsedCommandPtr)
 {
-    // int BITMAP_START = BLOCK_SIZE * 2;
-    // int BITMAP_END = BLOCK_SIZE * 3;
-
     bool availableInode = false;
 
     char *inodeBitampBlock = diskRead(1);
@@ -478,8 +479,21 @@ void makeFile(char ***parsedCommandPtr)
         }
     }
 
+    unsigned int inodeIndex = (index * 8) + (7-j);
+
+    char *metaData = diskRead(0);
+
+    unsigned int inodeCount = 0;
+    
+    //Splits the inode count (int) into four bytes.
+    inodeCount += (metaData[8] << 24);
+    inodeCount += (metaData[9] << 16);
+    inodeCount += (metaData[10] << 8);
+    inodeCount += metaData[11];
+
+
     //If no inode is availble, notify user.
-    if(!availableInode)
+    if(!availableInode || inodeIndex >= inodeCount)
     {
         printf("No more inodes available. A file must be deleted before another is added.\n");
     }
@@ -487,9 +501,10 @@ void makeFile(char ***parsedCommandPtr)
     {
         //TODO GET INODE NUMBER.
         diskWrite(1, &inodeBitampBlock);
-        printf("Inode at index %d has been created.\n", (index * 8) + (7-j));
+        printf("Inode at index %d has been created.\n", inodeIndex);
     }
 
+    free(metaData);
     free(inodeBitampBlock);
 }
 
@@ -514,22 +529,19 @@ void formatDisk()
     metaData[6] = (diskSize >> 8) & 0xFF;
     metaData[7] = diskSize & 0xFF;
 
+    unsigned inodeCount = (0.10 * diskBlocks);
+
     //Splits the inode count (int) into four bytes.
-    metaData[8] = (diskSize >> 24) & 0xFF;
-    metaData[9] = (diskSize >> 16) & 0xFF;
-    metaData[10] = (diskSize >> 8) & 0xFF;
-    metaData[11] = diskSize & 0xFF;
+    metaData[8] = (inodeCount >> 24) & 0xFF;
+    metaData[9] = (inodeCount >> 16) & 0xFF;
+    metaData[10] = (inodeCount >> 8) & 0xFF;
+    metaData[11] = inodeCount & 0xFF;
 
     diskWrite(0, &metaData);
 
+    //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values initially.
 
-
-
-
-
-    //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values.
-
-
+    printf("Disk has been initialized with file system.\n");
 }
 
 void createDirectory(char ***parsedCommandPtr)
