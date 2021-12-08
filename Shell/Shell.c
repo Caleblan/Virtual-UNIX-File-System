@@ -296,12 +296,12 @@ void writeFile(char ***parsedCommandPtr)
 
     char **parsedCommand = *parsedCommandPtr;
 
-    if(parsedCommand[1] == NULL)
+    if(parsedCommand[1] == NULL || parsedCommand[2] != NULL)
     {
-        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement] [String]\'.\n");
         return;
     }
-    else if(parsedCommand[2] != NULL)
+    else if(parsedCommand[3] != NULL)
     {
         printf("Too many arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
         return;
@@ -368,31 +368,6 @@ void writeFile(char ***parsedCommandPtr)
         counter++;
         
     } while (strlen(newString) > BLOCK_SIZE);
-    
-
-    while(strlen(newString) > BLOCK_SIZE)
-    {
-        counter++;
-
-        //If we run out of direct pointers, create and use an indirect pointer.
-        if(counter > 4)
-        {
-
-            // while()
-            // {
-            //      break;
-            // }
-        }
-
-        //TODO get INODE & adjust file size.
-        //TODO 
-
-        newString += BLOCK_SIZE;
-    }
-
-
-
-
 }
 
 /**
