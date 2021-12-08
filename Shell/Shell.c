@@ -485,42 +485,42 @@ void makeFile(char ***parsedCommandPtr)
     
     //Splits the inode count (int) into four bytes.
     
-    // inodeCount += (metaData[8] << 24);
-    // inodeCount += (metaData[9] << 16);
-    // inodeCount += (metaData[10] << 8);
-    // inodeCount += metaData[11];
+    inodeCount += (metaData[8] << 24);
+    inodeCount += (metaData[9] << 16);
+    inodeCount += (metaData[10] << 8);
+    inodeCount += metaData[11];
 
-    // printf("%d.\n", inodeCount);
+    printf("%d.\n", inodeCount);
 
-    // printf("%d.\n", metaData[8] << 24);
-    // printf("%d.\n", metaData[9] << 16);
-    // printf("%d.\n", metaData[10] << 8);
-    // printf("%d.\n", metaData[11]);
+    printf("%d.\n", metaData[8] << 24);
+    printf("%d.\n", metaData[9] << 16);
+    printf("%d.\n", metaData[10] << 8);
+    printf("%d.\n", metaData[11]);
 
-    // printf("%d.\n", metaData[0]);
-    // printf("%d.\n", metaData[1]);
-    // printf("%d.\n", metaData[2]);
-    // printf("%d.\n", metaData[3]);
-    // printf("%d.\n", metaData[4]);
-    // printf("%d.\n", metaData[5]);
-    // printf("%d.\n", metaData[6]);
-    // printf("%d.\n", metaData[7]);
-    // printf("%d.\n", metaData[8]);
-    // printf("%d.\n", metaData[9]);
-    // printf("%d.\n", metaData[10]);
-    // printf("%d.\n", metaData[11]);
+    printf("%d.\n", metaData[0]);
+    printf("%d.\n", metaData[1]);
+    printf("%d.\n", metaData[2]);
+    printf("%d.\n", metaData[3]);
+    printf("%d.\n", metaData[4]);
+    printf("%d.\n", metaData[5]);
+    printf("%d.\n", metaData[6]);
+    printf("%d.\n", metaData[7]);
+    printf("%d.\n", metaData[8]);
+    printf("%d.\n", metaData[9]);
+    printf("%d.\n", metaData[10]);
+    printf("%d.\n", metaData[11]);
 
-    // //If no inode is availble, notify user.
-    // if(!availableInode || inodeIndex >= inodeCount)
-    // {
-    //     printf("No more inodes available. A file must be deleted before another is added.\n");
-    // }
-    // else
-    // {
-    //     //TODO GET INODE NUMBER.
-    //     diskWrite(1, &inodeBitampBlock);
-    //     printf("Inode at index %d has been created.\n", inodeIndex);
-    // }
+    //If no inode is availble, notify user.
+    if(!availableInode || inodeIndex >= inodeCount)
+    {
+        printf("No more inodes available. A file must be deleted before another is added.\n");
+    }
+    else
+    {
+        //TODO GET INODE NUMBER.
+        diskWrite(1, &inodeBitampBlock);
+        printf("Inode at index %d has been created.\n", inodeIndex);
+    }
 
     free(metaData);
     free(inodeBitampBlock);
