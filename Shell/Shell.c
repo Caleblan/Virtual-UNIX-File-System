@@ -322,6 +322,8 @@ void writeFile(char ***parsedCommandPtr)
     char *inodeBitmapBlock = diskRead(1);
 
     char inodeByte = inodeBitmapBlock[inodeIndex / 8];
+
+    printf("Value %d\n", (inodeByte & (0b10000000 >> inodeIndex % 7)));
     
     if(inodeByte & (0b10000000 >> inodeIndex % 7) == 0)
     {
