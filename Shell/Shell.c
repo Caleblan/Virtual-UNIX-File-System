@@ -486,17 +486,16 @@ void makeFile(char ***parsedCommandPtr)
     unsigned int inodeCount = 0;
     
     //Splits the inode count (int) into four bytes.
+    
     inodeCount += (metaData[8] << 24);
-    printf("%d.\n", metaData[8] << 24);
     inodeCount += (metaData[9] << 16);
-    printf("%d.\n", metaData[9] << 16);
     inodeCount += (metaData[10] << 8);
-    printf("%d.\n", metaData[10] << 8);
     inodeCount += metaData[11];
+
+    printf("%d.\n", metaData[8] << 24);
+    printf("%d.\n", metaData[9] << 16);
+    printf("%d.\n", metaData[10] << 8);
     printf("%d.\n", metaData[11]);
-
-    printf("%d.\n", inodeCount);
-
 
     //If no inode is availble, notify user.
     if(!availableInode || inodeIndex >= inodeCount)
@@ -543,9 +542,9 @@ void formatDisk()
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
 
-    printf("%d.\n", metaData[8] << 24);
-    printf("%d.\n", metaData[9] << 16);
-    printf("%d.\n", metaData[10] << 8);
+    printf("%d.\n", metaData[8] >> 24);
+    printf("%d.\n", metaData[9] >> 16);
+    printf("%d.\n", metaData[10] >> 8);
     printf("%d.\n", metaData[11]);
 
     char* data = metaData;
