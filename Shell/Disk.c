@@ -11,7 +11,7 @@ char *disk2 = NULL;
 /**
  * Write to a block located somewhere on a disk.
  */
-void diskWrite(unsigned int diskLocation, char data[])
+void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
 {
     //If the addresses location exceeds the addressable blocks.
     if(diskLocation >= diskBlocks)
