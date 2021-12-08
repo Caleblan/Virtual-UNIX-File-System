@@ -553,10 +553,10 @@ void formatDisk()
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
 
-    printf("%d.\n", metaData[4]);
-    printf("%d.\n", metaData[5]);
-    printf("%d.\n", metaData[6]);
-    printf("%d.\n", metaData[7]);
+    printf("%d.\n", metaData[0]);
+    printf("%d.\n", metaData[1]);
+    printf("%d.\n", metaData[2]);
+    printf("%d.\n", metaData[3]);
 
     for(int i = 12; i < BLOCK_SIZE; i++)
     {
