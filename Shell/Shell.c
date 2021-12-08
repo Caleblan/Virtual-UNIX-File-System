@@ -459,6 +459,8 @@ void makeFile(char ***parsedCommandPtr)
         //Go through each bit of the char
         for(j = 7; j >= 0; j--)
         {
+            printf("%d\n", (index * 8) + (7-j));
+
             //Use "and" operation on bitmap with bitmask.
             //If value is equal to 0, that position is empty and we can use that inode.
             if((bitMask & bits) == 0)
@@ -487,8 +489,6 @@ void makeFile(char ***parsedCommandPtr)
     inodeCount += (int) (metaData[9] << 16);
     inodeCount += (int) (metaData[10] << 8);
     inodeCount += (int) metaData[11];
-
-    printf("%d.\n", inodeCount);
 
     //If no inode is availble, notify user.
     if(!availableInode || inodeIndex >= inodeCount)
@@ -535,7 +535,7 @@ void formatDisk()
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
 
-    
+
 
     //Set all remaining values to zero
     for(int i = 12; i < BLOCK_SIZE; i++)
