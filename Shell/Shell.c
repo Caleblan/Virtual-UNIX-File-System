@@ -558,6 +558,11 @@ void formatDisk()
     printf("%d.\n", metaData[6]);
     printf("%d.\n", metaData[7]);
 
+    for(int i = 12; i < BLOCK_SIZE; i++)
+    {
+        metaData[i] = 0;
+    }
+
     diskWrite(0, &metaData);
 
     //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values initially.
