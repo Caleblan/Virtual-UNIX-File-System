@@ -491,7 +491,7 @@ void makeFile(char ***parsedCommandPtr)
     printf("%d.\n", inodeCount);
 
     //If no inode is availble, notify user.
-    if(!availableInode /*|| inodeIndex >= inodeCount*/)
+    if(!availableInode || inodeIndex >= inodeCount)
     {
         printf("No more inodes available. A file must be deleted before another is added.\n");
     }
@@ -503,7 +503,7 @@ void makeFile(char ***parsedCommandPtr)
     }
 
     free(metaData);
-    // free(inodeBitampBlock);
+    free(inodeBitampBlock);
 }
 
 
@@ -534,6 +534,8 @@ void formatDisk()
     metaData[9] = (inodeCount >> 16) & 0xFF;
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
+
+    
 
     //Set all remaining values to zero
     for(int i = 12; i < BLOCK_SIZE; i++)
