@@ -531,7 +531,7 @@ void makeFile(char ***parsedCommandPtr)
  */
 void formatDisk()
 {
-    char metaData[12];
+    char metaData[128];
 
     //Split Magic Number (int) into four bytes.
     metaData[0] = (MAGIC_NUMBER >> 24) & 0xFF;
@@ -558,9 +558,7 @@ void formatDisk()
     printf("%d.\n", metaData[6]);
     printf("%d.\n", metaData[7]);
 
-    char* data = &metaData[0];
-
-    diskWrite(0, &data);
+    diskWrite(0, &metaData);
 
     //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values initially.
 
