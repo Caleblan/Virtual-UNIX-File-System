@@ -248,7 +248,6 @@ void diskWriteCommand(char ***parsedCommandPtr)
         printf("Inputted data exceeds disk block size (BlockSize: %d).\n", BLOCK_SIZE);
         return;
     }
-    //If value
 
     //TODO check for greater than input.
     sscanf(parsedCommand[1], "%u", &blockAddress);
@@ -283,7 +282,7 @@ void diskReadCommand(char ***parsedCommandPtr)
         printf("'%s' read from disk (Block Location: %d).\n", block, blockAddress);
     }
 
-    free(block);
+    //free(block);
 }
 
 //TODO ASK IF WRITE TAKES IN AN INODE NUMBER.
@@ -415,7 +414,7 @@ void deleteFile(char ***parsedCommandPtr)
         if((checkBitMask & charIndex) == 0)
         {
             printf("Inode at index \'%d\' has either not been created or has been deallocted already.\n", inodeIndex);
-            free(inodeBitmapBlock);
+            //free(inodeBitmapBlock);
             return;
         }
 
@@ -425,7 +424,7 @@ void deleteFile(char ***parsedCommandPtr)
     //Set bit value using bitmask so inode is marked as used.
     inodeBitmapBlock[charIndex] ^= setBitMask;
     diskWrite(inodeIndex, &inodeBitmapBlock);
-    free(inodeBitmapBlock);
+    //free(inodeBitmapBlock);
 
     //Set datablocks in datablock to null.
     //TODO use if so that if value is greater than, don't go through this.
@@ -521,8 +520,8 @@ void makeFile(char ***parsedCommandPtr)
         printf("Inode at index %d has been created.\n", inodeIndex);
     }
 
-    free(metaData);
-    free(inodeBitampBlock);
+    //free(metaData);
+    //free(inodeBitampBlock);
 }
 
 
