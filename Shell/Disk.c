@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "Disk.h"
 
 unsigned int diskSize = 0;
@@ -21,6 +22,13 @@ void diskWrite(unsigned int diskLocation, char** blockData)
 
     char* data = *blockData;
 
+    //Method requires that the block size is only a single block size.
+    if(strlen(data) > BLOCK_SIZE)
+    {
+        printf("Data length excceeds the block size of the disk (BlockSize: %d)", BLOCK_SIZE);
+        return;
+    }
+
     int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
     int counter = 0;
@@ -31,7 +39,7 @@ void diskWrite(unsigned int diskLocation, char** blockData)
         //Don't keep going in the loop if more characters
         if(data[counter] == '\0')
         {
-            disk2[i] = data[counter];
+            // disk2[i] = data[counter];
             break;
         }
 
@@ -58,12 +66,6 @@ char *diskRead(unsigned int diskLocation)
     //Copy data from disk to a buffer
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
-        if(disk2[i] == '\0')
-        {
-            readData[counter] = disk2[i];
-            break;
-        }
-
         readData[counter++] = disk2[i];
     }
 
