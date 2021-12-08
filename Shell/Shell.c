@@ -309,10 +309,66 @@ void writeFile(char ***parsedCommandPtr)
 
     //TODO dataBLock pointers for inode
 
+    int inodeIndex = atoi(parsedCommand[1]);
+
+
     //Used only if the string is larger than the BLOCK_SIZE
-    char *newString = parsedCommand[1];
+    char *newString = parsedCommand[2];
 
     int counter = 0;
+
+    
+    //Check if inode is currently allocated or not.
+    char *inodeBitmapBlock = diskRead(1);
+
+    char inodeByte = inodeBitmapBlock[inodeIndex / 8];
+    
+    if(inodeByte & (0b10000000 >> inodeIndex % 7) == 0)
+    {
+        printf("Inode at index %d is not currently allocated as a file.\n", inodeIndex);
+        free(inodeBitmapBlock);
+        return;
+    }
+
+    free(inodeBitmapBlock);
+
+
+    do
+    {
+        //If we run out of direct pointers, create and use an indirect pointer.
+        if(counter < 4)
+        {
+            char data
+
+            //Get one blocks worth of data for direct pointers.
+            for(int i = 0; i < BLOCK_SIZE; i++)
+            {
+                if(*newString != '\0')
+                {
+                    break;
+                }
+
+                newString++;
+            }
+
+            disk
+            
+        }
+        //If there is not enough pointers to hold data blocks, cut off the copy 
+        else if(counter > + BLOCK_SIZE * counter)
+        {
+            printf("File exceeds maximum size so file has been clipped");
+            return;
+        }
+        else
+        {
+
+        }
+
+        counter++;
+        
+    } while (strlen(newString) > BLOCK_SIZE);
+    
 
     while(strlen(newString) > BLOCK_SIZE)
     {
@@ -548,7 +604,7 @@ void formatDisk()
 
     //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values initially.
 
-    printf("Disk has been initialized with file system.\n");
+    printf("Disk has been initialized with file system (Inodes: %d).\n", inodeCount);
 }
 
 void createDirectory(char ***parsedCommandPtr)
