@@ -325,7 +325,7 @@ void writeFile(char ***parsedCommandPtr)
 
     printf("Value %d\n", (inodeByte & (0b10000000 >> inodeIndex % 7)));
     
-    if(inodeByte & (0b10000000 >> inodeIndex % 7) == 0)
+    if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
     {
         printf("Inode at index %d is not currently allocated as a file.\n", inodeIndex);
         free(inodeBitmapBlock);
