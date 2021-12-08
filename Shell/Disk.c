@@ -21,10 +21,9 @@ void diskWrite(unsigned int diskLocation, char** blockData)
     }
 
     char* data = *blockData;
-    unsigned int dataLength = strlen(data);
 
     //Method requires that the block size is only a single block size.
-    if(dataLength > BLOCK_SIZE)
+    if(strlen(data) > BLOCK_SIZE)
     {
         printf("Data length excceeds the block size of the disk (BlockSize: %d)", BLOCK_SIZE);
         return;
@@ -37,14 +36,16 @@ void diskWrite(unsigned int diskLocation, char** blockData)
     //Copy data from disk to a buffer
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
-        if(counter < dataLength)
+        //Don't keep going in the loop if more characters
+        if(data[counter] == '\0')
         {
-            printf("NOT NULL: %d\n", data[counter]);
-            disk2[i] = data[counter++];
+            printf("NULL : %d\n", data[counter]);
+            disk[i] = 0;
         }
         else
         {
-            disk2[i] = 0;
+            printf("NOT%d\n", data[counter]);
+            disk2[i] = data[counter++];
         }
     }
 
