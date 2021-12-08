@@ -35,13 +35,13 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         //Don't keep going in the loop if more characters
-        if(*data[counter] == '\0')
+        if(data[counter] == '\0')
         {
             disk2[i] = 0;
         }
         else
         {
-            disk2[i] = *data[counter++];
+            disk2[i] = data[counter++];
         }
     }
 
