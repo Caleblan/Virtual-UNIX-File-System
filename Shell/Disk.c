@@ -45,8 +45,10 @@ void diskWrite(unsigned int diskLocation, char (*data)[BLOCK_SIZE])
         else
         {
             printf("NOT%d\n", *data[counter]);
-            disk2[i] = *data[counter++];
+            disk2[i] = *data[counter];
         }
+
+        counter++;
     }
 
 }
