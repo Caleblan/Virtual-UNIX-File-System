@@ -496,10 +496,10 @@ void makeFile(char ***parsedCommandPtr)
     // // printf("%d.\n", metaData[10] << 8);
     // printf("%d.\n", (int) metaData[11]);
 
-    printf("%d.\n", metaData[8]);
-    printf("%d.\n", metaData[9]);
-    printf("%d.\n", metaData[10]);
-    printf("%d.\n", metaData[11]);
+    printf("%d.\n", metaData[4]);
+    printf("%d.\n", metaData[5]);
+    printf("%d.\n", metaData[6]);
+    printf("%d.\n", metaData[7]);
 
     //If no inode is availble, notify user.
     if(!availableInode || inodeIndex >= inodeCount)
@@ -533,10 +533,10 @@ void formatDisk()
     metaData[3] = MAGIC_NUMBER & 0xFF;
  
     //Splits the block count (int) into four bytes.
-    metaData[4] = (diskSize >> 24) & 0xFF;
-    metaData[5] = (diskSize >> 16) & 0xFF;
-    metaData[6] = (diskSize >> 8) & 0xFF;
-    metaData[7] = diskSize & 0xFF;
+    metaData[4] = (diskBlocks >> 24) & 0xFF;
+    metaData[5] = (diskBlocks >> 16) & 0xFF;
+    metaData[6] = (diskBlocks >> 8) & 0xFF;
+    metaData[7] = diskBlocks & 0xFF;
 
     unsigned inodeCount = (0.10 * diskBlocks);
 
