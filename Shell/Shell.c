@@ -517,7 +517,7 @@ void makeFile(char ***parsedCommandPtr)
  */
 void formatDisk()
 {
-    char metaData[12];
+    char* metaData;
 
     //Split Magic Number (int) into four bytes.
     metaData[0] = (MAGIC_NUMBER >> 24) & 0xFF;
