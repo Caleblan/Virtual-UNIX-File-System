@@ -444,71 +444,51 @@ void makeFile(char ***parsedCommandPtr)
 {
     bool availableInode = false;
 
-    // char *inodeBitampBlock = diskRead(1);
+    char *inodeBitampBlock = diskRead(1);
 
-    // int index;
-    // int j;
-    // char bitMask;
+    int index;
+    int j;
+    char bitMask;
 
-    // //Search through bitmap until there is an open position
-    // for(index = 0; index < BLOCK_SIZE; index++)
-    // {
-    //     char bits = inodeBitampBlock[index];
-    //     bitMask = 0b10000000;
+    //Search through bitmap until there is an open position
+    for(index = 0; index < BLOCK_SIZE; index++)
+    {
+        char bits = inodeBitampBlock[index];
+        bitMask = 0b10000000;
 
-    //     //Go through each bit of the char
-    //     for(j = 7; j >= 0; j--)
-    //     {
-    //         //Use "and" operation on bitmap with bitmask.
-    //         //If value is equal to 0, that position is empty and we can use that inode.
-    //         if((bitMask & bits) == 0)
-    //         {
-    //             //Set bit value using bitmask so inode is marked as used.
-    //             inodeBitampBlock[index] ^= bitMask;
-    //             availableInode = true;
-    //             break;
-    //         }
+        //Go through each bit of the char
+        for(j = 7; j >= 0; j--)
+        {
+            //Use "and" operation on bitmap with bitmask.
+            //If value is equal to 0, that position is empty and we can use that inode.
+            if((bitMask & bits) == 0)
+            {
+                //Set bit value using bitmask so inode is marked as used.
+                inodeBitampBlock[index] ^= bitMask;
+                availableInode = true;
+                break;
+            }
 
-    //         bitMask = bitMask >> 1;
-    //     }
+            bitMask = bitMask >> 1;
+        }
 
-    //     if(availableInode)
-    //     {
-    //         break;
-    //     }
-    // }
+        if(availableInode)
+        {
+            break;
+        }
+    }
 
-    // unsigned int inodeIndex = (index * 8) + (7-j);
+    unsigned int inodeIndex = (index * 8) + (7-j);
 
-    char *metaData = diskRead(0);
-    unsigned int inodeCount = 0;
+    char *metaData = diskRead(0);   
     
-    //Splits the inode count (int) into four bytes.
-    
-    inodeCount += (int) (metaData[8] << 24);
+    //
+    unsigned int inodeCount = (int) (metaData[8] << 24);
     inodeCount += (int) (metaData[9] << 16);
     inodeCount += (int) (metaData[10] << 8);
     inodeCount += (int) metaData[11];
 
     printf("%d.\n", inodeCount);
-
-    printf("%d.\n", metaData[8] << 24);
-    printf("%d.\n", metaData[9] << 16);
-    printf("%d.\n", metaData[10] << 8);
-    printf("%d.\n", metaData[11]);
-
-    printf("%d.\n", metaData[0]);
-    printf("%d.\n", metaData[1]);
-    printf("%d.\n", metaData[2]);
-    printf("%d.\n", metaData[3]);
-    printf("%d.\n", metaData[4]);
-    printf("%d.\n", metaData[5]);
-    printf("%d.\n", metaData[6]);
-    printf("%d.\n", metaData[7]);
-    printf("%d.\n", metaData[8]);
-    printf("%d.\n", metaData[9]);
-    printf("%d.\n", metaData[10]);
-    printf("%d.\n", metaData[11]);
 
     //If no inode is availble, notify user.
     if(!availableInode /*|| inodeIndex >= inodeCount*/)
@@ -518,8 +498,8 @@ void makeFile(char ***parsedCommandPtr)
     else
     {
         //TODO GET INODE NUMBER.
-        // diskWrite(1, &inodeBitampBlock);
-        // printf("Inode at index %d has been created.\n", inodeIndex);
+        diskWrite(1, &inodeBitampBlock);
+        printf("Inode at index %d has been created.\n", inodeIndex);
     }
 
     free(metaData);
