@@ -518,12 +518,12 @@ void makeFile(char ***parsedCommandPtr)
     else
     {
         //TODO GET INODE NUMBER.
-        diskWrite(1, &inodeBitampBlock);
+        // diskWrite(1, &inodeBitampBlock);
         // printf("Inode at index %d has been created.\n", inodeIndex);
     }
 
     free(metaData);
-    free(inodeBitampBlock);
+    // free(inodeBitampBlock);
 }
 
 
