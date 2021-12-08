@@ -38,10 +38,12 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
         if(data[counter] == '\0')
         {
             disk2[i] = 0;
+            printf("NULL %d", disk2[i]);
         }
         else
         {
             disk2[i] = data[counter++];
+            printf("NOT NULL %d", disk2[i]);
         }
     }
 
