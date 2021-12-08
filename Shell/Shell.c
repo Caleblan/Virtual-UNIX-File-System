@@ -500,6 +500,14 @@ void makeFile(char ***parsedCommandPtr)
     printf("%d.\n", metaData[1]);
     printf("%d.\n", metaData[2]);
     printf("%d.\n", metaData[3]);
+    printf("%d.\n", metaData[4]);
+    printf("%d.\n", metaData[5]);
+    printf("%d.\n", metaData[6]);
+    printf("%d.\n", metaData[7]);
+    printf("%d.\n", metaData[8]);
+    printf("%d.\n", metaData[9]);
+    printf("%d.\n", metaData[10]);
+    printf("%d.\n", metaData[11]);
 
     //If no inode is availble, notify user.
     if(!availableInode || inodeIndex >= inodeCount)
