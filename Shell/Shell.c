@@ -485,10 +485,10 @@ void makeFile(char ***parsedCommandPtr)
     
     //Splits the inode count (int) into four bytes.
     
-    inodeCount += (metaData[8] << 24);
-    inodeCount += (metaData[9] << 16);
-    inodeCount += (metaData[10] << 8);
-    inodeCount += metaData[11];
+    inodeCount += (int) (metaData[8] << 24);
+    inodeCount += (int) (metaData[9] << 16);
+    inodeCount += (int) (metaData[10] << 8);
+    inodeCount += (int) metaData[11];
 
     printf("%d.\n", inodeCount);
 
