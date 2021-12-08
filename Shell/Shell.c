@@ -546,7 +546,7 @@ void formatDisk()
     printf("%d.\n", metaData[10]);
     printf("%d.\n", metaData[11]);
 
-    char* data = metaData;
+    char* data = &metaData[0];
 
     diskWrite(0, &data);
 
