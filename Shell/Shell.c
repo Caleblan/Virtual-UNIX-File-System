@@ -482,7 +482,6 @@ void makeFile(char ***parsedCommandPtr)
     unsigned int inodeIndex = (index * 8) + (7-j);
 
     char *metaData = diskRead(0);
-
     unsigned int inodeCount = 0;
     
     //Splits the inode count (int) into four bytes.
@@ -490,12 +489,12 @@ void makeFile(char ***parsedCommandPtr)
     // inodeCount += (metaData[8] << 24);
     // inodeCount += (metaData[9] << 16);
     // inodeCount += (metaData[10] << 8);
-    inodeCount += metaData[11];
+    inodeCount += (int) metaData[11];
 
     // printf("%d.\n", metaData[8] << 24);
     // printf("%d.\n", metaData[9] << 16);
     // printf("%d.\n", metaData[10] << 8);
-    printf("%d.\n", metaData[11]);
+    printf("%d.\n", (int) metaData[11]);
 
     //If no inode is availble, notify user.
     if(!availableInode || inodeIndex >= inodeCount)
@@ -562,10 +561,6 @@ void createDirectory(char ***parsedCommandPtr)
 
     
 }
-
-
-
-
 
 
 
