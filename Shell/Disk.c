@@ -11,7 +11,7 @@ char *disk2 = NULL;
 /**
  * Write to a block located somewhere on a disk.
  */
-void diskWrite(unsigned int diskLocation, char* blockData[])
+void diskWrite(unsigned int diskLocation, char data[])
 {
     //If the addresses location exceeds the addressable blocks.
     if(diskLocation >= diskBlocks)
@@ -20,7 +20,7 @@ void diskWrite(unsigned int diskLocation, char* blockData[])
         return;
     }
 
-    char data[] = *blockData;
+    //char data = *blockData;
 
     //Method requires that the block size is only a single block size.
     if(strlen(data) > BLOCK_SIZE)
@@ -74,7 +74,7 @@ char *diskRead(unsigned int diskLocation)
 
     
 
-    return &disk2[BLOCK_SIZE * diskLocation];
+    return disk2[BLOCK_SIZE * diskLocation];
 }
 
 
