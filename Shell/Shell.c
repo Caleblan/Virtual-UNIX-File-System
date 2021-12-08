@@ -498,7 +498,7 @@ void makeFile(char ***parsedCommandPtr)
     else
     {
         char data[BLOCK_SIZE];
-        memccpy(&data, inodeBitampBlock, BLOCK_SIZE);
+        memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
         diskWrite(1, data);
         printf("Inode at index %d has been created.\n", inodeIndex);
     }
