@@ -29,6 +29,9 @@ void diskWrite(unsigned int diskLocation, char (*data)[BLOCK_SIZE])
         return;
     }
 
+
+    char pointer[BLOCK_SIZE] = *data;
+
     int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
     int counter = 0;
@@ -37,18 +40,16 @@ void diskWrite(unsigned int diskLocation, char (*data)[BLOCK_SIZE])
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         //Don't keep going in the loop if more characters
-        if(*data[counter] == '\0')
+        if(pointer[counter] == '\0')
         {
-            printf("NULL : %d\n", *data[counter]);
+            printf("NULL : %d\n", pointer[counter]);
             disk2[i] = 0;
         }
         else
         {
-            printf("NOT%d\n", *data[counter]);
-            disk2[i] = *data[counter];
+            printf("NOT%d\n", pointer[counter]);
+            disk2[i] = pointer[counter++];
         }
-
-        counter++;
     }
 
 }
