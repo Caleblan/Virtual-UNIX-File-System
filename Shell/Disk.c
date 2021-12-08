@@ -66,7 +66,7 @@ char *diskRead(unsigned int diskLocation)
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         readData[counter++] = disk2[i];
-        printf("%d", disk2[i]]);
+        printf("%d", disk2[i]);
     }
 
     
