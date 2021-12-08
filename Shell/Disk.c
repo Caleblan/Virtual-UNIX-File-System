@@ -20,8 +20,6 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
         return;
     }
 
-    //char data = *blockData;
-
     //Method requires that the block size is only a single block size.
     if(strlen(data) > BLOCK_SIZE)
     {
@@ -39,12 +37,10 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
         //Don't keep going in the loop if more characters
         if(*data[counter] == '\0')
         {
-            printf("NULL : %d\n", *data[counter]);
             disk2[i] = 0;
         }
         else
         {
-            printf("NOT%d\n", *data[counter]);
             disk2[i] = *data[counter++];
         }
     }
@@ -60,17 +56,17 @@ char *diskRead(unsigned int diskLocation)
         return NULL;
     }
 
-    // char *readData = malloc(BLOCK_SIZE * sizeof(char));
+    char *readData = malloc(BLOCK_SIZE * sizeof(char));
 
-    // int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
+    int BLOCK_END = (diskLocation * BLOCK_SIZE) + BLOCK_SIZE;
 
-    // int counter = 0;
+    int counter = 0;
     
-    // //Copy data from disk to a buffer
-    // for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
-    // {
-    //     readData[counter++] = disk2[i];
-    // }
+    //Copy data from disk to a buffer
+    for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
+    {
+        readData[counter++] = disk2[i];
+    }
 
     
 
