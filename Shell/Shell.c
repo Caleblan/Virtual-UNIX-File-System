@@ -491,10 +491,15 @@ void makeFile(char ***parsedCommandPtr)
     // inodeCount += (metaData[10] << 8);
     inodeCount += (int) metaData[11];
 
-    // printf("%d.\n", metaData[8] << 24);
-    // printf("%d.\n", metaData[9] << 16);
-    // printf("%d.\n", metaData[10] << 8);
-    printf("%d.\n", (int) metaData[11]);
+    // // printf("%d.\n", metaData[8] << 24);
+    // // printf("%d.\n", metaData[9] << 16);
+    // // printf("%d.\n", metaData[10] << 8);
+    // printf("%d.\n", (int) metaData[11]);
+
+    printf("%d.\n", metaData[0]);
+    printf("%d.\n", metaData[1]);
+    printf("%d.\n", metaData[2]);
+    printf("%d.\n", metaData[3]);
 
     //If no inode is availble, notify user.
     if(!availableInode || inodeIndex >= inodeCount)
