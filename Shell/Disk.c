@@ -40,7 +40,7 @@ void diskWrite(unsigned int diskLocation, char** blockData)
         if(data[counter] == '\0')
         {
             printf("NULL : %d\n", data[counter]);
-            disk[i] = 0;
+            disk2[i] = 0;
         }
         else
         {
