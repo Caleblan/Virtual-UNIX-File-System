@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 
-void diskWrite(unsigned int diskLocation, char (*data)[BLOCK_SIZE]);
+void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE]);
 
 char *diskRead(unsigned int diskLocation);
 
