@@ -338,7 +338,7 @@ void writeFile(char ***parsedCommandPtr)
         //If we run out of direct pointers, create and use an indirect pointer.
         if(counter < 4)
         {
-            char data
+            // char data
 
             //Get one blocks worth of data for direct pointers.
             for(int i = 0; i < BLOCK_SIZE; i++)
@@ -351,7 +351,7 @@ void writeFile(char ***parsedCommandPtr)
                 newString++;
             }
 
-            disk
+            // disk
             
         }
         //If there is not enough pointers to hold data blocks, cut off the copy 
