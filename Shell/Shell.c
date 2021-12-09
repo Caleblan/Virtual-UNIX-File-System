@@ -404,7 +404,7 @@ void writeFile(char ***parsedCommandPtr)
         }
         else
         {
-            memcpy(&blockData, newString, strlen(newString));
+            memcpy(&blockData, newString, BLOCK_SIZE);
             diskWrite(dataBlockIndex, blockData);
             break;
         }
