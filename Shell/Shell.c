@@ -397,7 +397,7 @@ void writeFile(char ***parsedCommandPtr)
                 //TODO check if there is another datablock group
             }
             //Write new dataGroupBitmap to disk.
-            dataBitmapBlock[dataBitmapIndex / 8] ^= (0b10000000 >> (dataBitmapIndex % 7));
+            dataBitmapBlock[dataBitmapIndex / 8] = dataBitmapBlock[dataBitmapIndex / 8] ^ (0b10000000 >> (dataBitmapIndex % 7));
             printf("%d, %d\n", dataBitmapBlock[dataBitmapIndex / 8], (dataBitmapBlock[dataBitmapIndex / 8] ^ (0b10000000 >> (dataBitmapIndex % 7))));
             diskWrite(2 + inodeCount, dataBitmapBlock);
             free(dataBitmapBlock);
