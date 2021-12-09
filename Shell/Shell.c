@@ -285,93 +285,6 @@ void diskReadCommand(char ***parsedCommandPtr)
     //free(block);
 }
 
-//TODO ASK IF WRITE TAKES IN AN INODE NUMBER.
-void writeFile(char ***parsedCommandPtr)
-{
-    if(disk2 == NULL)
-    {
-        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
-        return;
-    }
-
-    char **parsedCommand = *parsedCommandPtr;
-
-    if(parsedCommand[1] == NULL || parsedCommand[2] == NULL)
-    {
-        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement] [String]\'.\n");
-        return;
-    }
-    else if(parsedCommand[3] != NULL)
-    {
-        printf("Too many arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
-        return;
-    }
-
-    //TODO dataBLock pointers for inode
-
-    int inodeIndex = atoi(parsedCommand[1]);
-
-
-    //Used only if the string is larger than the BLOCK_SIZE
-    char *newString = parsedCommand[2];
-
-    int counter = 0;
-
-    
-    //Check if inode is currently allocated or not.
-    char *inodeBitmapBlock = diskRead(1);
-
-    char inodeByte = inodeBitmapBlock[inodeIndex / 8];
-
-    printf("Value %d\n", (inodeByte & (0b10000000 >> inodeIndex % 7)));
-    
-    if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
-    {
-        printf("Inode at index %d is not currently allocated as a file.\n", inodeIndex);
-        free(inodeBitmapBlock);
-        return;
-    }
-
-    free(inodeBitmapBlock);
-
-
-    do
-    {
-        //If we run out of direct pointers, create and use an indirect pointer.
-        if(counter < 4)
-        {
-            // char data
-
-            //Get one blocks worth of data for direct pointers.
-            for(int i = 0; i < BLOCK_SIZE; i++)
-            {
-                if(*newString != '\0')
-                {
-                    break;
-                }
-
-                newString++;
-            }
-
-            // disk
-            
-        }
-        //If there is not enough pointers to hold data blocks, cut off the copy 
-        else if(counter > + BLOCK_SIZE * counter)
-        {
-            printf("File exceeds maximum size so file has been clipped");
-            return;
-        }
-        else
-        {
-
-        }
-
-        counter++;
-        
-    } while (strlen(newString) > BLOCK_SIZE);
-}
-
 /**
  * Creates 
  */
@@ -408,7 +321,104 @@ void createDisk(char ***parsedCommandPtr)
     printf("Disk partition of size %d bytes has been created (BlockSize: %d, BlockCount: %d).\n", diskSize, BLOCK_SIZE, diskBlocks);
 }
 
+//TODO ASK IF WRITE TAKES IN AN INODE NUMBER.
+void writeFile(char ***parsedCommandPtr)
+{
+    if(disk2 == NULL)
+    {
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
 
+    char **parsedCommand = *parsedCommandPtr;
+
+    if(parsedCommand[1] == NULL || parsedCommand[2] == NULL)
+    {
+        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement] [String]\'.\n");
+        return;
+    }
+    else if(parsedCommand[3] != NULL)
+    {
+        printf("Too many arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        return;
+    }
+
+    //TODO dataBLock pointers for inode
+
+    int inodeIndex = atoi(parsedCommand[1]);
+    
+    //This code block checks if an inode is currently alloacted ot not 
+    char *inodeBitmapBlock = diskRead(1);
+    char inodeByte = inodeBitmapBlock[inodeIndex / 8];
+    //If node is currently unallocated, give error message to user.
+    if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
+    {
+        printf("Inode at index %d is not currently allocated as a file.\n", inodeIndex);
+        free(inodeBitmapBlock);
+        return;
+    }
+    free(inodeBitmapBlock);
+
+
+    //Used only if the string is larger than the BLOCK_SIZE
+    char *newString = parsedCommand[2];
+
+
+    //Get inode count from superblock.
+    char *metaData = diskRead(0);   
+    unsigned int inodeCount = (int) (metaData[8] << 24);
+    inodeCount += (int) (metaData[9] << 16);
+    inodeCount += (int) (metaData[10] << 8);
+    inodeCount += (int) metaData[11];
+    free(metaData);
+
+
+    //Gets the block index of first dataBlocKBitmap
+    int dataBitmapIndex = (2 + inodeCount);
+
+
+    //Assign to direct pointers
+    for(int counter = 0; i < 4; i++)
+    {
+        char *dataBitmapBlock = diskRead(dataBitmapIndex);
+        int dataBlockIndex = bitmapSearch(&dataBitmapBlock);
+        if(dataBlockIndex == -1)
+        {
+            printf("No more data blocks are available.\n");
+            free(dataBitmapBlock);
+            return;
+            //TODO check if there is another datablock group
+        }
+        //Write new dataGroupBitmap to disk.
+        diskWrite(dataBitmapIndex, &dataBitmapBlock);
+        free(dataBitmapBlock);
+
+        //Write to disk.
+        char blockData[BLOCK_SIZE];
+        if(strlen(newString) > BLOCK_SIZE)
+        {
+            memcpy(&blockData, newString, BLOCK_SIZE);
+            diskWrite(dataBlockIndex, &blockData);
+        }
+        else
+        {
+            memcpy(&blockData, newString, strlen(newString));
+            diskWrite(dataBlockIndex, &blockData);
+            break;
+        }
+
+        newString += BLOCK_SIZE;
+    }
+
+
+        // //If there is not enough pointers to hold data blocks, cut off the copy 
+        // if(counter > BLOCK_SIZE * counter)
+        // {
+        //     printf("File exceeds maximum size so file has been clipped");
+        //     return;
+        // }
+
+}
 
 void deleteFile(char ***parsedCommandPtr)
 {
@@ -475,13 +485,46 @@ void deleteFile(char ***parsedCommandPtr)
  */
 void makeFile(char ***parsedCommandPtr)
 {
-    bool availableInode = false;
-
+    //Get inodeBitmapBlock and check if spot is open
     char *inodeBitampBlock = diskRead(1);
+    int inodeIndex = bitmapSearch(&inodeBitampBlock);
+
+    //Get inode count from superblock.
+    char *metaData = diskRead(0);   
+    unsigned int inodeCount = (int) (metaData[8] << 24);
+    inodeCount += (int) (metaData[9] << 16);
+    inodeCount += (int) (metaData[10] << 8);
+    inodeCount += (int) metaData[11];
+    free(metaData);
+
+    //If no inode is availble, notify user.
+    if(inodeIndex == -1 || inodeIndex >= inodeCount)
+    {
+        printf("No more inodes available. A file must be deleted before another is added.\n");
+    }
+    //Unallocated inode index is found.
+    else
+    {
+        char data[BLOCK_SIZE];
+        memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
+        diskWrite(1, data);
+        printf("Inode at index %d has been created.\n", inodeIndex);
+    }
+
+    free(inodeBitampBlock);
+}
+
+int bitmapSearch(char **bitmapBlock)
+{
+    char *inodeBitmapBlock = *bitmapBlock;
+
+    bool availableSpot = false;
 
     int index;
     int j;
     char bitMask;
+
+    char finalIndex = -1;
 
     //Search through bitmap until there is an open position
     for(index = 0; index < BLOCK_SIZE; index++)
@@ -500,44 +543,21 @@ void makeFile(char ***parsedCommandPtr)
             {
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitampBlock[index] ^= bitMask;
-                availableInode = true;
+                availableSpot = true;
                 break;
             }
 
             bitMask = bitMask >> 1;
         }
 
-        if(availableInode)
+        if(availableSpot)
         {
+            finalIndex = ((index * 8) + (7-j));
             break;
         }
     }
 
-    unsigned int inodeIndex = (index * 8) + (7-j);
-
-    char *metaData = diskRead(0);   
-    
-    //
-    unsigned int inodeCount = (int) (metaData[8] << 24);
-    inodeCount += (int) (metaData[9] << 16);
-    inodeCount += (int) (metaData[10] << 8);
-    inodeCount += (int) metaData[11];
-
-    //If no inode is availble, notify user.
-    if(!availableInode || inodeIndex >= inodeCount)
-    {
-        printf("No more inodes available. A file must be deleted before another is added.\n");
-    }
-    else
-    {
-        char data[BLOCK_SIZE];
-        memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
-        diskWrite(1, data);
-        printf("Inode at index %d has been created.\n", inodeIndex);
-    }
-
-    free(metaData);
-    free(inodeBitampBlock);
+    return finalIndex;
 }
 
 
@@ -568,8 +588,6 @@ void formatDisk()
     metaData[9] = (inodeCount >> 16) & 0xFF;
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
-
-
 
     //Set all remaining values to zero
     for(int i = 12; i < BLOCK_SIZE; i++)
