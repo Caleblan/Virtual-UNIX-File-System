@@ -354,10 +354,8 @@ void writeFile(char ***parsedCommandPtr)
         printf("Inode index %d exceeds \'%d\' inode count.\n", inodeIndex, inodeCount);
         return;
     }
-
-    
     //If node is currently unallocated, give error message to user.
-    if(!existingInode(inodeIndex))
+    else if(!existingInode(inodeIndex))
     {
         printf("Inode at index %d is not currently allocated to a file.\n", inodeIndex);
         return;
@@ -397,6 +395,7 @@ void writeFile(char ***parsedCommandPtr)
                 //TODO check if there is another datablock group
             }
             //Write new dataGroupBitmap to disk.
+            dataBitmapBlock[dataBitmapIndex / 8] ^= 0b10000000 >> (dataBitmapIndex % 7);
             diskWrite(dataBitmapIndex, dataBitmapBlock);
             free(dataBitmapBlock);
 
@@ -426,6 +425,8 @@ void writeFile(char ***parsedCommandPtr)
         //Set inode pointer to null
         else
         {
+            printf("Here index %d\n", i);
+
             //Split inode count into four chars.
             inode[((i + 1) * 4)] = 0;
             inode[((i + 1) * 4) + 1] = 0;
