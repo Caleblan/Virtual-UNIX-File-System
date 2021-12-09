@@ -586,8 +586,11 @@ void deleteFile(char ***parsedCommandPtr)
     char *inode = diskRead(2 + inodeIndex);
     
     //Clear all the data pointers (4 direct and indirect)
-    for(int i = 1; i <= 5; i++)
+    for(int i = 1; i <= 4; i++)
     {
+
+        //TODO change counter to clear indirect pointer.
+
         //Get data block pointer
         unsigned int pointer = (int) (inode[(i * 4)] << 24);
         pointer += (int) (inode[(i * 4) + 1] << 16);
@@ -595,10 +598,10 @@ void deleteFile(char ***parsedCommandPtr)
         pointer += (int) inode[(i * 4) + 3];
 
         //Unallocate datablock corresponding to pointer.
-        // char *dataBitmapBlock = diskRead(2 + getInodeCount);
-        // dataBitmapBlock[pointer / 8] ^= 0b10000000 >> (pointer % 7);
-        // diskWrite(2 + getInodeCount, inodeBitmapBlock);
-        // free(dataBitmapBlock);
+        char *dataBitmapBlock = diskRead(2 + getInodeCount);
+        dataBitmapBlock[pointer / 8] ^= 0b10000000 >> (pointer % 7);
+        diskWrite(2 + getInodeCount, inodeBitmapBlock);
+        free(dataBitmapBlock);
     }
 }
 
