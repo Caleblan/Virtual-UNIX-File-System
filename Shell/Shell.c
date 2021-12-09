@@ -578,7 +578,6 @@ void deleteFile(char ***parsedCommandPtr)
 
     //Used to deallocate inode in inodeBitmap.
     char *inodeBitmapBlock = diskRead(1);
-    free(inodeBitmapBlock);
     inodeBitmapBlock[inodeIndex / 8] ^= 0b10000000 >> (inodeIndex % 7);
     diskWrite(1, inodeBitmapBlock);
     free(inodeBitmapBlock);
