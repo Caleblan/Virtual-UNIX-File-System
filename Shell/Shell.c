@@ -542,7 +542,7 @@ int bitmapSearch(char **bitmapBlock)
             if((bitMask & bits) == 0)
             {
                 //Set bit value using bitmask so inode is marked as used.
-                inodeBitampBlock[index] ^= bitMask;
+                inodeBitmapBlock[index] ^= bitMask;
                 availableSpot = true;
                 break;
             }
