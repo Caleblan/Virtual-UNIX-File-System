@@ -415,11 +415,11 @@ void writeFile(char ***parsedCommandPtr)
                 newString += stringLenth;
             }
 
-            //Split inode count into four chars.
-            inode[((i + 1) * 4)] = (inodeIndex >> 24) & 0xFF;
-            inode[((i + 1) * 4) + 1] = (inodeIndex >> 16) & 0xFF;
-            inode[((i + 1) * 4) + 2] = (inodeIndex >> 8) & 0xFF;
-            inode[((i + 1) * 4) + 3] = inodeIndex & 0xFF;
+            //Split data block counter to 4 bytes.
+            inode[((i + 1) * 4)] = (dataBlockIndex >> 24) & 0xFF;
+            inode[((i + 1) * 4) + 1] = (dataBlockIndex >> 16) & 0xFF;
+            inode[((i + 1) * 4) + 2] = (dataBlockIndex >> 8) & 0xFF;
+            inode[((i + 1) * 4) + 3] = dataBlockIndex & 0xFF;
 
             fileBlockCount++;
         }
@@ -461,6 +461,9 @@ void writeFile(char ***parsedCommandPtr)
     }
     else
     {
+
+        //TODO temporary fix, need to still adjust file size properly.
+        printf("New file has been created with size %d blocks.\n", fileBlockCount);
         return;
     }
 
