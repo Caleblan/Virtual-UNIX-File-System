@@ -353,7 +353,7 @@ void writeFile(char ***parsedCommandPtr)
     //If node is currently unallocated, give error message to user.
     if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
     {
-        printf("Inode at index %d is not currently allocated as a file.\n", inodeIndex);
+        printf("Inode at index %d is not currently allocated to a file.\n", inodeIndex);
         free(inodeBitmapBlock);
         return;
     }
@@ -390,7 +390,7 @@ void writeFile(char ***parsedCommandPtr)
             //TODO check if there is another datablock group
         }
         //Write new dataGroupBitmap to disk.
-        diskWrite(dataBitmapIndex, &dataBitmapBlock);
+        diskWrite(dataBitmapIndex, dataBitmapBlock);
         free(dataBitmapBlock);
 
         //Write to disk.
