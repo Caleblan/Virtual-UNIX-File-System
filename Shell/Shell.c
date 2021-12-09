@@ -357,14 +357,10 @@ void writeFile(char ***parsedCommandPtr)
     }
 
     
-    //This code block checks if an inode is currently alloacted ot not 
-    char *inodeBitmapBlock = diskRead(1);
-    char inodeByte = inodeBitmapBlock[inodeIndex / 8];
     //If node is currently unallocated, give error message to user.
-    if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
+    if(!existingInode(inodeIndex))
     {
         printf("Inode at index %d is not currently allocated to a file.\n", inodeIndex);
-        free(inodeBitmapBlock);
         return;
     }
     // //TODO allow rewrites
@@ -372,7 +368,6 @@ void writeFile(char ***parsedCommandPtr)
     // {
 
     // }
-    free(inodeBitmapBlock);
 
     //Used only if the string is larger than the BLOCK_SIZE
     char *newString = parsedCommand[2];
@@ -460,10 +455,10 @@ void writeFile(char ***parsedCommandPtr)
         }
 
         //Sets indirect pointer for inode.
-        inode[32] = (inodeIndex >> 24) & 0xFF;
-        inode[33] = (inodeIndex >> 16) & 0xFF;
-        inode[34] = (inodeIndex >> 8) & 0xFF;
-        inode[35] = inodeIndex & 0xFF;
+        inode[16] = (inodeIndex >> 24) & 0xFF;
+        inode[17] = (inodeIndex >> 16) & 0xFF;
+        inode[18] = (inodeIndex >> 8) & 0xFF;
+        inode[19] = inodeIndex & 0xFF;
     }
 
     // char *dataBitmapBlock = diskRead(dataBitmapIndex);
@@ -567,44 +562,50 @@ void deleteFile(char ***parsedCommandPtr)
     //TODO add error checking here.
     int inodeIndex = atoi(parsedCommand[1]);
 
-    //Finds inode in bitmap and sets it's value to 0.
-    char* inodeBitmapBlock = diskRead(1);
-    unsigned int charIndex = inodeBitmapBlock[inodeIndex / 8];
-    char setBitMask = 0b01111111 >> (inodeIndex % 8);
+    unsigned int inodeCount = getInodeCount();
 
-    //Checks if the inode is currently allocated or not.
-    char checkBitMask = 0b10000000;
-    for(int i = 0; i < 7; i++)
+    //Print error message tries to user if inodeIndex is greater than alotted time
+    if(inodeIndex >= inodeCount)
     {
-        //If the inode bitmap already says the node is free, return error message to the user.
-        if((checkBitMask & charIndex) == 0)
-        {
-            printf("Inode at index \'%d\' has either not been created or has been deallocted already.\n", inodeIndex);
-            //free(inodeBitmapBlock);
-            return;
-        }
-
-        checkBitMask = checkBitMask >> 1;
+        printf("Inode index %d exceeds \'%d\' inode count.\n", inodeIndex, inodeCount);
+        return;
     }
 
-    //Set bit value using bitmask so inode is marked as used.
-    inodeBitmapBlock[charIndex] ^= setBitMask;
-    diskWrite(inodeIndex, &inodeBitmapBlock);
-    //free(inodeBitmapBlock);
+    if(!existingInode(inodeIndex))
+    {
+        printf("Inode at index %d is not currently allocated to a file.\n", inodeIndex);
+        return;
+    }
 
-    //Set datablocks in datablock to null.
-    //TODO use if so that if value is greater than, don't go through this.
-    char* inodeBlock = diskRead(2 + inodeIndex);
+    //Used to deallocate inode in inodeBitmap.
+    char *inodeBitmapBlock = diskRead(1);
+    free(inodeBitmapBlock);
+    inodeBitmapBlock[inodeIndex / 8] ^= 0b10000000 >> (inodeIndex % 7);
+    diskWrite(1, inodeBitmapBlock);
+    free(inodeBitmapBlock);
 
-    char* dataBlockGroup = diskRead(4);
 
- 
-    //TODO allow multiple string arguements if I get time.
-    //diskWrite();
+    char *inode = diskRead(2 + inodeIndex);
+    
+    //Clear all the data pointers (4 direct and indirect)
+    for(int i = 1; i <= 5; i++)
+    {
+        //Get data block pointer
+        unsigned int pointer = (int) (inode[(i * 4)] << 24);
+        pointer += (int) (inode[(i * 4) + 1] << 16);
+        pointer += (int) (inode[(i * 4) + 2] << 8);
+        pointer += (int) inode[(i * 4) + 3];
+
+        //Unallocate datablock corresponding to pointer.
+        char *dataBitmapBlock = diskRead(2 + getInodeCount);
+        dataBitmapBlock[pointer / 8] ^= 0b10000000 >> (pointer % 7);
+        diskWrite(2 + getInodeCount, inodeBitmapBlock);
+        free(dataBitmapBlock);
+    }
 }
 
 /**
- * Allocates a free block of data 
+ * Allocates a free inode to a file.
  */
 void makeFile(char ***parsedCommandPtr)
 {
@@ -642,6 +643,24 @@ unsigned int getInodeCount()
     free(metaData);
 
     return inodeCount;
+}
+
+/**
+ * Returns a value determining if 
+ */
+bool existingInode(unsigned int inodeIndex)
+{
+    //This code block checks if an inode is currently alloacted ot not 
+    char *inodeBitmapBlock = diskRead(1);
+    char inodeByte = inodeBitmapBlock[inodeIndex / 8];
+    free(inodeBitmapBlock);
+    //If node is currently unallocated, give error message to user.
+    if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 int bitmapSearch(char **bitmapBlock)
