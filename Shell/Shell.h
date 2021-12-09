@@ -1,6 +1,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+#include <stdbool.h>
+
 #define MAGIC_NUMBER 0xf0f03410
 #define BLOCKGROUP_SIZE 1024
 
@@ -86,6 +88,8 @@ void formatDisk();
 int bitmapSearch(char **bitmapBlock);
 
 unsigned int getInodeCount();
+
+bool existingInode(unsigned int inodeIndex);
 
 
 #endif
