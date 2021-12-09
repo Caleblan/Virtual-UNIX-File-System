@@ -595,10 +595,10 @@ void deleteFile(char ***parsedCommandPtr)
         pointer += (int) inode[(i * 4) + 3];
 
         //Unallocate datablock corresponding to pointer.
-        char *dataBitmapBlock = diskRead(2 + getInodeCount);
-        dataBitmapBlock[pointer / 8] ^= 0b10000000 >> (pointer % 7);
-        diskWrite(2 + getInodeCount, inodeBitmapBlock);
-        free(dataBitmapBlock);
+        // char *dataBitmapBlock = diskRead(2 + getInodeCount);
+        // dataBitmapBlock[pointer / 8] ^= 0b10000000 >> (pointer % 7);
+        // diskWrite(2 + getInodeCount, inodeBitmapBlock);
+        // free(dataBitmapBlock);
     }
 }
 
