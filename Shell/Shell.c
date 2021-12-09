@@ -378,7 +378,7 @@ void writeFile(char ***parsedCommandPtr)
 
 
     //Assign to direct pointers
-    for(int counter = 0; i < 4; i++)
+    for(int counter = 0; counter < 4; i++)
     {
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBlockIndex = bitmapSearch(&dataBitmapBlock);
@@ -529,7 +529,7 @@ int bitmapSearch(char **bitmapBlock)
     //Search through bitmap until there is an open position
     for(index = 0; index < BLOCK_SIZE; index++)
     {
-        char bits = inodeBitampBlock[index];
+        char bits = inodeBitmapBlock[index];
         bitMask = 0b10000000;
 
         //Go through each bit of the char
