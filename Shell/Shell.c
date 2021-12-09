@@ -459,6 +459,10 @@ void writeFile(char ***parsedCommandPtr)
         inode[18] = (inodeIndex >> 8) & 0xFF;
         inode[19] = inodeIndex & 0xFF;
     }
+    else
+    {
+        return;
+    }
 
     // char *dataBitmapBlock = diskRead(dataBitmapIndex);
     // int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
@@ -608,7 +612,7 @@ void deleteFile(char ***parsedCommandPtr)
         }
     }
 
-    printf("File with inode %d has been deleted.\n", getInodeCount());
+    printf("File with inode %d has been deleted.\n", inodeIndex);
 }
 
 /**
