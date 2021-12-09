@@ -85,5 +85,7 @@ void formatDisk();
 
 int bitmapSearch(char **bitmapBlock);
 
+unsigned int getInodeCount();
+
 
 #endif
