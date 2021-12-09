@@ -382,7 +382,7 @@ void writeFile(char ***parsedCommandPtr)
     {
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-        int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+        int dataBlockIndex = (3 + inodeCount);
 
         stringLenth = strlen(newString);
         if(stringLenth != 0)
@@ -396,7 +396,7 @@ void writeFile(char ***parsedCommandPtr)
             }
             //Write new dataGroupBitmap to disk.
             dataBitmapBlock[dataBitmapIndex / 8] ^= 0b10000000 >> (dataBitmapIndex % 7);
-            diskWrite(dataBitmapIndex, dataBitmapBlock);
+            diskWrite(dataBitmapIndex + dataBitmapIndex, dataBitmapBlock);
             free(dataBitmapBlock);
 
             //Write to part of string data to allocated data block.
