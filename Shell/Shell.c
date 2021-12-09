@@ -515,7 +515,7 @@ void writeFile(char ***parsedCommandPtr)
 
     //Write indirect pointer block onto disk.
     char indirectPtr[BLOCK_SIZE] = {0};
-    memcpy(&inodeArr, inode, BLOCK_SIZE);
+    memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
     diskWrite(dataBlockIndex , indirectPtr);
     free(indirectPointer);
 
