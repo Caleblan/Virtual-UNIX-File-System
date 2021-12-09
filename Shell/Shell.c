@@ -382,7 +382,7 @@ void writeFile(char ***parsedCommandPtr)
     {
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         
-        //TODO allow for multiple datablocks
+        //TODO allow for multiple datablocksBitmaps
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
         int dataBlockIndex = (3 + inodeCount);
 
@@ -397,9 +397,8 @@ void writeFile(char ***parsedCommandPtr)
                 //TODO check if there is another datablock group
             }
             //Write new dataGroupBitmap to disk.
-            dataBitmapBlock[dataBitmapIndex / 8] ^= (0b10000000 >> (dataBitmapIndex % 7));
-            printf("%d\n", dataBitmapBlock[dataBitmapIndex / 8]);
             char dataBitmap[BLOCK_SIZE] = {0};
+            printf("%d\n", dataBitmapBlock[dataBitmapIndex / 8]);
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + inodeCount, dataBitmap);
             free(dataBitmapBlock);
