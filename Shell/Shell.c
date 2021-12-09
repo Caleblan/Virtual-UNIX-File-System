@@ -396,7 +396,8 @@ void writeFile(char ***parsedCommandPtr)
             }
             //Write new dataGroupBitmap to disk.
             dataBitmapBlock[dataBitmapIndex / 8] ^= 0b10000000 >> (dataBitmapIndex % 7);
-            diskWrite(dataBitmapIndex + dataBitmapIndex, dataBitmapBlock);
+            diskWrite(dataBitmapIndex + dataBlockIndex, dataBitmapBlock);
+            printf("%d\n", (dataBitmapIndex + dataBlockIndex));
             free(dataBitmapBlock);
 
             //Write to part of string data to allocated data block.
