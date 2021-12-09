@@ -1,6 +1,5 @@
 #include <unistd.h>
 #include <sys/wait.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
