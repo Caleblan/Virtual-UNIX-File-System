@@ -398,12 +398,12 @@ void writeFile(char ***parsedCommandPtr)
         if(strlen(newString) > BLOCK_SIZE)
         {
             memcpy(&blockData, newString, BLOCK_SIZE);
-            diskWrite(dataBlockIndex, &blockData);
+            diskWrite(dataBlockIndex, blockData);
         }
         else
         {
             memcpy(&blockData, newString, strlen(newString));
-            diskWrite(dataBlockIndex, &blockData);
+            diskWrite(dataBlockIndex, blockData);
             break;
         }
 
