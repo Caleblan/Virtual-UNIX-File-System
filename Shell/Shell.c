@@ -378,7 +378,7 @@ void writeFile(char ***parsedCommandPtr)
 
 
     //Assign to direct pointers
-    for(int counter = 0; counter < 4; i++)
+    for(int i = 0; i < 4; i++)
     {
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBlockIndex = bitmapSearch(&dataBitmapBlock);
