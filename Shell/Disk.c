@@ -38,6 +38,8 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
         printf("Index: %d , %c\n", i, disk2[i]);
     }
 
+    printf("\n");    
+
 }
 
 char *diskRead(unsigned int diskLocation)
