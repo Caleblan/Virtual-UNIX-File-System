@@ -381,7 +381,9 @@ void writeFile(char ***parsedCommandPtr)
     for(int i = 0; i < 4; i++)
     {
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
-        int dataBlockIndex = bitmapSearch(&dataBitmapBlock);
+        int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
+        int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+
         if(dataBlockIndex == -1)
         {
             printf("No more data blocks are available.\n");
