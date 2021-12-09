@@ -360,10 +360,6 @@ void writeFile(char ***parsedCommandPtr)
     free(inodeBitmapBlock);
 
 
-    //Used only if the string is larger than the BLOCK_SIZE
-    char *newString = parsedCommand[2];
-
-
     //Get inode count from superblock.
     char *metaData = diskRead(0);   
     unsigned int inodeCount = (int) (metaData[8] << 24);
@@ -372,6 +368,9 @@ void writeFile(char ***parsedCommandPtr)
     inodeCount += (int) metaData[11];
     free(metaData);
 
+
+    //Used only if the string is larger than the BLOCK_SIZE
+    char *newString = parsedCommand[2];
 
     //Gets the block index of first dataBlocKBitmap
     int dataBitmapIndex = (2 + inodeCount);
@@ -396,7 +395,7 @@ void writeFile(char ***parsedCommandPtr)
         free(dataBitmapBlock);
 
         //Write to disk.
-        char blockData[BLOCK_SIZE];
+        char blockData[BLOCK_SIZE] = {0};
         if(strlen(newString) > BLOCK_SIZE)
         {
             memcpy(&blockData, newString, BLOCK_SIZE);
