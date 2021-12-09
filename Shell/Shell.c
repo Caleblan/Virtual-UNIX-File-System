@@ -359,15 +359,7 @@ void writeFile(char ***parsedCommandPtr)
     }
     free(inodeBitmapBlock);
 
-
-    //Get inode count from superblock.
-    char *metaData = diskRead(0);   
-    unsigned int inodeCount = (int) (metaData[8] << 24);
-    inodeCount += (int) (metaData[9] << 16);
-    inodeCount += (int) (metaData[10] << 8);
-    inodeCount += (int) metaData[11];
-    free(metaData);
-
+    unsigned int inodeCount = getInodeCount();
 
     //Used only if the string is larger than the BLOCK_SIZE
     char *newString = parsedCommand[2];
@@ -375,6 +367,7 @@ void writeFile(char ***parsedCommandPtr)
     //Gets the block index of first dataBlocKBitmap
     int dataBitmapIndex = (2 + inodeCount);
 
+    unsigned int fileBlockCount = 0;
 
     //Assign to direct pointers
     for(int i = 0; i < 4; i++)
@@ -400,13 +393,33 @@ void writeFile(char ***parsedCommandPtr)
         {
             memcpy(&blockData, newString, BLOCK_SIZE);
             diskWrite(dataBlockIndex, blockData);
+
+            //TODO set inode block
+        }
+        //Set remaining paointers to null
+        else if(strlen(newString) == 0)
+        {
+            // int inodePosition
+            // inodeIndex = 0;
+
         }
         else
         {
-            memcpy(&blockData, newString, BLOCK_SIZE);
+
+            // char data[BLOCK_SIZE];
+            // memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
+            // diskWrite(1, data);
+            // printf("Inode at index %d has been created.\n", inodeIndex);
+
+
+
+            memcpy(&blockData, newString, strlen(newString));
             diskWrite(dataBlockIndex, blockData);
-            break;
+
+            //TODO set inode block
         }
+
+        //SET OTHER POINTERS TO NULL
 
         newString += BLOCK_SIZE;
     }
@@ -490,13 +503,7 @@ void makeFile(char ***parsedCommandPtr)
     char *inodeBitampBlock = diskRead(1);
     int inodeIndex = bitmapSearch(&inodeBitampBlock);
 
-    //Get inode count from superblock.
-    char *metaData = diskRead(0);   
-    unsigned int inodeCount = (int) (metaData[8] << 24);
-    inodeCount += (int) (metaData[9] << 16);
-    inodeCount += (int) (metaData[10] << 8);
-    inodeCount += (int) metaData[11];
-    free(metaData);
+    unsigned int inodeCount = getInodeCount();
 
     //If no inode is availble, notify user.
     if(inodeIndex == -1 || inodeIndex >= inodeCount)
@@ -513,6 +520,19 @@ void makeFile(char ***parsedCommandPtr)
     }
 
     free(inodeBitampBlock);
+}
+
+unsigned int getInodeCount()
+{
+    //Get inode count from superblock.
+    char *metaData = diskRead(0);   
+    unsigned int inodeCount = (int) (metaData[8] << 24);
+    inodeCount += (int) (metaData[9] << 16);
+    inodeCount += (int) (metaData[10] << 8);
+    inodeCount += (int) metaData[11];
+    free(metaData);
+
+    return inodeCount;
 }
 
 int bitmapSearch(char **bitmapBlock)
