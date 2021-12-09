@@ -83,5 +83,7 @@ void createDirectory(char ***parsedCommandPtr);
 
 void formatDisk();
 
+int bitmapSearch(char **bitmapBlock);
+
 
 #endif
