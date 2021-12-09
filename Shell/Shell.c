@@ -539,9 +539,9 @@ void writeFile(char ***parsedCommandPtr)
 
 void deleteFile(char ***parsedCommandPtr)
 {
-    if(disk2 != NULL)
+    if(disk2 == NULL)
     {
-        printf("Disk partition has already been created (DiskSize (in bytes): %d, DiskBlocks: %d).\n", diskSize, diskBlocks);
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
         return;
     }
     
