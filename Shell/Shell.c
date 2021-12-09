@@ -607,6 +607,8 @@ void deleteFile(char ***parsedCommandPtr)
             free(dataBitmapBlock);
         }
     }
+
+    printf("File with inode %d has been deleted.\n", getInodeCount());
 }
 
 /**
