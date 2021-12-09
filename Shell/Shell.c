@@ -400,7 +400,7 @@ void writeFile(char ***parsedCommandPtr)
             dataBitmapBlock[dataBitmapIndex / 8] ^= (0b10000000 >> (dataBitmapIndex % 7));
             char dataBitmap[BLOCK_SIZE];
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-            diskWrite(2 + inodeCount, dataBitmapBlock);
+            diskWrite(2 + inodeCount, dataBitmap);
             free(dataBitmapBlock);
 
             //Write to part of string data to allocated data block.
