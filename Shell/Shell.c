@@ -112,14 +112,12 @@ void parseCommand(char ***parsedCommandPtr)
 {
     char **parsedCommand = *parsedCommandPtr;
 
-
+    //Disk and filesystem commands
     if(strcmp(parsedCommand[0], "create_partition") == 0)
     {
         createDisk(parsedCommandPtr);
     }
-    
-    
-    if(strcmp(parsedCommand[0], "disk_write") == 0)
+    else if(strcmp(parsedCommand[0], "disk_write") == 0)
     {
         diskWriteCommand(parsedCommandPtr);
     }
@@ -149,7 +147,7 @@ void parseCommand(char ***parsedCommandPtr)
     }
 
     //Basic shell commands
-    if (strcmp(parsedCommand[0], "exit") == 0)
+    else if (strcmp(parsedCommand[0], "exit") == 0)
     {
         active = false;
     }
