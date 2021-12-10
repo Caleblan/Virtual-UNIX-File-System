@@ -569,28 +569,33 @@ void writeFile(char ***parsedCommandPtr)
                 return;
             }
 
+
             printf("Before data disk write\n");
             //Put part of string into data block
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
             char dataBlock[BLOCK_SIZE] = {0};
+
+            //Increment pointer. We don't want to increment more than length of string or else 
+            if(stringLenth > BLOCK_SIZE)
+            {
+                memcpy(&dataBlock, newString, BLOCK_SIZE);
+                newString += BLOCK_SIZE;
+            }
+            else
+            {
+                memcpy(&dataBlock, newString, stringLenth);
+                newString += stringLenth;
+            }
+
+
             printf("Middle data disk write\n");
             memcpy(&dataBlock, newString, BLOCK_SIZE);
-            // diskWrite(dataBlockIndex, dataBlock);
+            diskWrite(dataBlockIndex, dataBlock);
 
             //Split inode count into four chars and put address into indirect block.
             compressValue(&indirectPointer , dataBitmapIndex, i * 4);
 
             fileBlockCount++;
-
-            //Increment pointer. We don't want to increment more than length of string or else 
-            if(stringLenth > BLOCK_SIZE)
-            {
-                newString += BLOCK_SIZE;
-            }
-            else
-            {
-                newString += stringLenth;
-            }
         }
 
         //If the string length is still greater, clip file as there are no more data blocks to use.
