@@ -689,6 +689,7 @@ void deleteFile(char ***parsedCommandPtr)
 
         //Get pointer from four bytes.
         unsigned int pointer = extractValue(&inode, i * 4);
+        printf("Pointer value: %d\n", pointer);
 
         //If address has been set, go clear that location 
         if(pointer > 0)
