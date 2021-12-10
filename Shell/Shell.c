@@ -452,10 +452,10 @@ void writeFile(char ***parsedCommandPtr)
         
         //TODO allow for multiple datablocksBitmaps
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-        int dataBlockIndex = (3 + inodeCount);
+        int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
 
         stringLenth = strlen(newString);
-        if(stringLenth != 0)
+        if(stringLenth > 0)
         {
             if(dataBlockIndex == -1)
             {
