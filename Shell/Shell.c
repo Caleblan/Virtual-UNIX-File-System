@@ -560,7 +560,7 @@ void writeFile(char ***parsedCommandPtr)
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
             //Put part of string into data block
             char dataBlock[BLOCK_SIZE] = {0};
-            memcpy(&dataBlock, dataBitmapBlock, BLOCK_SIZE);
+            memcpy(&dataBlock, newString, BLOCK_SIZE);
             diskWrite(dataBlockIndex, dataBlock);
             free(dataBitmapBlock);
 
