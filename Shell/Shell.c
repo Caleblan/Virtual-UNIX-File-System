@@ -664,7 +664,8 @@ void deleteFile(char ***parsedCommandPtr)
 
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount());
-            dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 8));
+            unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+            dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
             char dataBitmap[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + getInodeCount(), dataBitmap);
@@ -714,11 +715,6 @@ void compressValue(char **dataPtr , unsigned int value, unsigned int index)
     data[index + 1] = (value >> 16) & 0xFF;
     data[index + 2] = (value >> 8) & 0xFF;
     data[index + 3] = value & 0xFF;
-
-    printf("[%c, %d]\n", data[index], data[index]);
-    printf("[%c, %d]\n", data[index + 1], data[index + 1]);
-    printf("[%c, %d]\n", data[index + 2], data[index + 2]);
-    printf("[%c, %d]\n", data[index + 3], data[index + 3]);
 }
 
 /**
