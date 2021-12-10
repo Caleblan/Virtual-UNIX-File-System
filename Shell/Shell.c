@@ -828,6 +828,8 @@ int bitmapSearch(char **bitmapBlock)
             //If value is equal to 0, that position is empty and we can use that inode.
             if((bitMask & bits) == 0)
             {
+                printf("Bitmap: %d\n", inodeBitmapBlock[index]);
+
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitmapBlock[index] ^= bitMask;
                 printf("Bitmap: %d\n", inodeBitmapBlock[index]);
