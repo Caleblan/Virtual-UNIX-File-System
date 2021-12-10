@@ -494,8 +494,6 @@ void writeFile(char ***parsedCommandPtr)
         //Set inode pointer to null
         else
         {
-            printf("Here index %d\n", i);
-
             //Split inode count into four chars.
             inode[((i + 1) * 4)] = 0;
             inode[((i + 1) * 4) + 1] = 0;
@@ -529,7 +527,7 @@ void writeFile(char ***parsedCommandPtr)
         }
 
         //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
-        compressValue(&inode , inodeIndex, 16);
+        compressValue(&inode , inodeIndex, 24);
     }
     else
     {
