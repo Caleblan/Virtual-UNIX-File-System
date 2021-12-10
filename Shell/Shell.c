@@ -661,10 +661,11 @@ void deleteFile(char ***parsedCommandPtr)
         if(pointer > 0)
         {
             printf("Inode Count %d\n", 2 + getInodeCount());
+            printf("DataBlock index %d\n", pointer - (3 + inodeCount));
 
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount());
-            unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+            unsigned int dataBlockIndex = pointer - (3 + inodeCount);
             dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
             char dataBitmap[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
