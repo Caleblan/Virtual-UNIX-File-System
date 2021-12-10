@@ -520,7 +520,6 @@ void writeFile(char ***parsedCommandPtr)
         char dataBitmap[BLOCK_SIZE] = {0};
         memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
         diskWrite(2 + inodeCount, dataBitmap);
-        free(dataBitmapBlock);
 
         //If no open position on first
         if(dataBitmapIndex == -1)
@@ -553,11 +552,11 @@ void writeFile(char ***parsedCommandPtr)
             }
 
             //Set datablock bitmap.
-            dataBitmapBlock = diskRead(dataBitmapIndex);
-            dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-            char dataBitmap2[BLOCK_SIZE] = {0};
-            memcpy(&dataBitmap2, dataBitmapBlock, BLOCK_SIZE);
-            diskWrite(2 + inodeCount, dataBitmap2);
+            // char *dataBitmapBlock2 = diskRead(dataBitmapIndex);
+            int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
+            char dataBitmap[BLOCK_SIZE] = {0};
+            memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
+            diskWrite(2 + inodeCount, dataBitmap);
             free(dataBitmapBlock);
 
             //If no open position on first
@@ -604,6 +603,8 @@ void writeFile(char ***parsedCommandPtr)
         {
             printf("File exceeds maximum block size so file has been clipped.\n");
         }
+
+        free(dataBitmapBlock);
     }
 
     printf("IndirectBlock disk write\n");
