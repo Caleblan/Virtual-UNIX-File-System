@@ -507,7 +507,7 @@ void writeFile(char ***parsedCommandPtr)
     //If there is still more characters in the string, allocate a datablock of addresses and fill them.
     if(strlen(newString) > 0)
     {
-
+        printf("Allocated extra block pointer.\n");
 
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
@@ -528,7 +528,7 @@ void writeFile(char ***parsedCommandPtr)
         }
 
         //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
-        compressValue(&inode , inodeIndex, 24);
+        compressValue(&inode , inodeIndex, 20);
     
         // char *dataBitmapBlock = diskRead(dataBitmapIndex);
         // int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
