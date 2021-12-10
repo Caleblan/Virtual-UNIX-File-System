@@ -573,7 +573,7 @@ void writeFile(char ***parsedCommandPtr)
             //Put part of string into data block
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
 
-            printf("%d\n", );
+            // printf("%d\n", );
 
             char dataBlock[BLOCK_SIZE] = {0};
 
