@@ -91,5 +91,9 @@ unsigned int getInodeCount();
 
 bool existingInode(unsigned int inodeIndex);
 
+unsigned int extractValue(char **dataPtr , unsigned int index);
+
+void compressValue(char **dataPtr , unsigned int value, unsigned int index);
+
 
 #endif
