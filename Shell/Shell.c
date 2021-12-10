@@ -575,7 +575,7 @@ void writeFile(char ***parsedCommandPtr)
             char dataBlock[BLOCK_SIZE] = {0};
             printf("Middle data disk write\n");
             memcpy(&dataBlock, newString, BLOCK_SIZE);
-            diskWrite(dataBlockIndex, dataBlock);
+            // diskWrite(dataBlockIndex, dataBlock);
 
             //Split inode count into four chars and put address into indirect block.
             compressValue(&indirectPointer , dataBitmapIndex, i * 4);
