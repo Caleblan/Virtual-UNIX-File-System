@@ -502,6 +502,8 @@ void writeFile(char ***parsedCommandPtr)
         }
     }
 
+    char *indirectPointer;
+    unsigned int indirectDataBlockIndex;
 
     //If there is still more characters in the string, allocate a datablock of addresses and fill them.
     if(strlen(newString) > 0)
@@ -510,7 +512,7 @@ void writeFile(char ***parsedCommandPtr)
 
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-        unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+        indirectDataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
 
         //Write new dataGroupBitmap to disk.
         char dataBitmap[BLOCK_SIZE] = {0};
@@ -532,7 +534,7 @@ void writeFile(char ***parsedCommandPtr)
         dataBitmapBlock = diskRead(dataBitmapIndex);
         dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
 
-        char *indirectPointer = diskRead(dataBlockIndex);
+        indirectPointer = diskRead(dataBlockIndex);
 
         //Keep assigning blocks until either blocks run out or string runs out.
         for(int i = 0; i < BLOCK_SIZE / 4; i++)
@@ -547,7 +549,7 @@ void writeFile(char ***parsedCommandPtr)
 
             //Set datablock pointer.
             dataBitmapBlock = diskRead(dataBitmapIndex);
-            dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
+            unsigned int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
             free(dataBitmapBlock);
             
@@ -583,10 +585,10 @@ void writeFile(char ***parsedCommandPtr)
     }
 
     // //Write indirect pointer block onto disk.
-    // char indirectPtr[BLOCK_SIZE] = {0};
-    // memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
-    // diskWrite(dataBlockIndex , indirectPtr);
-    // free(indirectPointer);
+    char indirectPtr[BLOCK_SIZE] = {0};
+    memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
+    diskWrite(indirectDataBlockIndex , indirectPtr);
+    free(indirectPointer);
 
     //Split fileSize into four chars for inode.
     compressValue(&inode , fileBlockCount, 0);
