@@ -556,9 +556,9 @@ void writeFile(char ***parsedCommandPtr)
             //Set datablock bitmap.
             dataBitmapBlock = diskRead(dataBitmapIndex);
             dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-            char dataBitmap[BLOCK_SIZE] = {0};
-            memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-            diskWrite(2 + getInodeCount(), dataBitmap);
+            char dataBitmap2[BLOCK_SIZE] = {0};
+            memcpy(&dataBitmap2, dataBitmapBlock, BLOCK_SIZE);
+            diskWrite(2 + inodeCount, dataBitmap2);
 
             //If no open position on first
             if(dataBitmapIndex == -1)
