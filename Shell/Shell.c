@@ -776,17 +776,17 @@ void formatDisk()
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
 
-    printf("%d, %c\n", metaData[11], metaData[0]);
-    printf("%d, %c\n", metaData[11], metaData[1]);
-    printf("%d, %c\n", metaData[11], metaData[2]);
-    printf("%d, %c\n", metaData[11], metaData[3]);
-    printf("%d, %c\n", metaData[11], metaData[4]);
-    printf("%d, %c\n", metaData[11], metaData[5]);
-    printf("%d, %c\n", metaData[11], metaData[6]);
-    printf("%d, %c\n", metaData[11], metaData[7]);
-    printf("%d, %c\n", metaData[11], metaData[8]);
-    printf("%d, %c\n", metaData[11], metaData[9]);
-    printf("%d, %c\n", metaData[11], metaData[10]);
+    printf("%d, %c\n", metaData[0], metaData[0]);
+    printf("%d, %c\n", metaData[1], metaData[1]);
+    printf("%d, %c\n", metaData[2], metaData[2]);
+    printf("%d, %c\n", metaData[3], metaData[3]);
+    printf("%d, %c\n", metaData[4], metaData[4]);
+    printf("%d, %c\n", metaData[5], metaData[5]);
+    printf("%d, %c\n", metaData[6], metaData[6]);
+    printf("%d, %c\n", metaData[7], metaData[7]);
+    printf("%d, %c\n", metaData[8], metaData[8]);
+    printf("%d, %c\n", metaData[9], metaData[9]);
+    printf("%d, %c\n", metaData[10], metaData[10]);
     printf("%d, %c\n", metaData[11], metaData[11]);
 
 
