@@ -526,7 +526,6 @@ void writeFile(char ***parsedCommandPtr)
         if(dataBitmapIndex == -1)
         {
             printf("No more data blocks are available.\n");
-            free(dataBitmapBlock);
             return;
         }
 
@@ -559,6 +558,7 @@ void writeFile(char ***parsedCommandPtr)
             char dataBitmap2[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap2, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + inodeCount, dataBitmap2);
+            free(dataBitmapBlock);
 
             //If no open position on first
             if(dataBitmapIndex == -1)
