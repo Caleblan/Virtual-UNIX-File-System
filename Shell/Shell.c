@@ -595,7 +595,7 @@ void deleteFile(char ***parsedCommandPtr)
 
     //Used to deallocate inode in inodeBitmap.
     char *inodeBitmapBlock = diskRead(1);
-    inodeBitmapBlock[inodeIndex / 8] ^= 0b10000000 >> (inodeIndex % 7);
+    inodeBitmapBlock[inodeIndex / 8] ^= 0b10000000 >> (inodeIndex % 8);
     //Write indirect pointer block onto disk.
     char indirectPtr[BLOCK_SIZE] = {0};
     memcpy(&indirectPtr, inodeBitmapBlock, BLOCK_SIZE);
@@ -625,7 +625,7 @@ void deleteFile(char ***parsedCommandPtr)
 
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount);
-            dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 7)) ^ 0b01111111;
+            dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 8)) ^ 0b01111111;
             diskWrite(2 + getInodeCount, inodeBitmapBlock);
             free(dataBitmapBlock);
         }
@@ -639,6 +639,21 @@ void deleteFile(char ***parsedCommandPtr)
  */
 void makeFile(char ***parsedCommandPtr)
 {
+    if(disk2 == NULL)
+    {
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
+    
+    char **parsedCommand = *parsedCommandPtr;
+
+    if(parsedCommand[1] != NULL)
+    {
+        printf("Too many arguements. Command should follow form \'make_file\'.\n");
+        return;
+    }
+
+
     //Get inodeBitmapBlock and check if spot is open
     char *inodeBitampBlock = diskRead(1);
     int inodeIndex = bitmapSearch(&inodeBitampBlock);
@@ -685,7 +700,7 @@ bool existingInode(unsigned int inodeIndex)
     char inodeByte = inodeBitmapBlock[inodeIndex / 8];
     free(inodeBitmapBlock);
     //If node is currently unallocated, give error message to user.
-    if((inodeByte & (0b10000000 >> inodeIndex % 7)) == 0)
+    if((inodeByte & (0b10000000 >> inodeIndex % 8)) == 0)
     {
         return false;
     }
@@ -775,23 +790,10 @@ void formatDisk()
     metaData[9] = (inodeCount >> 16) & 0xFF;
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
-
-    printf("%d, %c\n", metaData[0], metaData[0]);
-    printf("%d, %c\n", metaData[1], metaData[1]);
-    printf("%d, %c\n", metaData[2], metaData[2]);
-    printf("%d, %c\n", metaData[3], metaData[3]);
-    printf("%d, %c\n", metaData[4], metaData[4]);
-    printf("%d, %c\n", metaData[5], metaData[5]);
-    printf("%d, %c\n", metaData[6], metaData[6]);
-    printf("%d, %c\n", metaData[7], metaData[7]);
-    printf("%d, %c\n", metaData[8], metaData[8]);
-    printf("%d, %c\n", metaData[9], metaData[9]);
-    printf("%d, %c\n", metaData[10], metaData[10]);
-    printf("%d, %c\n", metaData[11], metaData[11]);
-
-
+    
     diskWrite(0, metaData);
 
+    // createDirectory();
 
 
     //Calculate how many datablockBitmaps we need.
@@ -804,8 +806,42 @@ void formatDisk()
 
 void createDirectory(char ***parsedCommandPtr)
 {
- //TODO allow multiple string arguements if I get time.
+    if(disk2 == NULL)
+    {
+        printf("No disk partition has been created. Try creating one with \'create_partition [unsigned int arguement]\'.\n");
+        return;
+    }
+    
+    char **parsedCommand = *parsedCommandPtr;
 
+    if(parsedCommand[1] != NULL)
+    {
+        printf("Too many arguements. Command should follow form \'create_directory\'.\n");
+        return;
+    }
+
+
+    //Get inodeBitmapBlock and check if spot is open
+    char *inodeBitampBlock = diskRead(1);
+    int inodeIndex = bitmapSearch(&inodeBitampBlock);
+
+    unsigned int inodeCount = getInodeCount();
+
+    //If no inode is availble, notify user.
+    if(inodeIndex == -1 || inodeIndex >= inodeCount)
+    {
+        printf("No more inodes available. A file must be deleted before another is added.\n");
+    }
+    //Unallocated inode index is found.
+    else
+    {
+        char data[BLOCK_SIZE];
+        memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
+        diskWrite(1, data);
+        printf("Inode at index %d has been created.\n", inodeIndex);
+    }
+
+    free(inodeBitampBlock);
     
 }
 
