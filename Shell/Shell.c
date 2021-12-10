@@ -249,7 +249,10 @@ void diskWriteCommand(char ***parsedCommandPtr)
     //TODO check for greater than input.
     sscanf(parsedCommand[1], "%u", &blockAddress);
 
-    diskWrite(blockAddress, &parsedCommand[2]);
+    char data[BLOCK_SIZE] = {0};
+    memcpy(&data, parsedCommand[2], BLOCK_SIZE);
+
+    diskWrite(blockAddress, data);
 
     printf("'%s' written to disk (Block Location: %d).\n", parsedCommand[2], blockAddress);
 
@@ -352,7 +355,7 @@ void makeFile(char ***parsedCommandPtr)
     //Unallocated inode index is found.
     else
     {
-        char data[BLOCK_SIZE];
+        char data[BLOCK_SIZE] = {0};
         memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
         diskWrite(1, data);
         printf("Inode at index %d has been created.\n", inodeIndex);
@@ -529,12 +532,13 @@ void writeFile(char ***parsedCommandPtr)
         }
 
         //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
-        compressValue(&inode , indirectDataBlockIndex, 20);
+        compressValue(&inode, indirectDataBlockIndex, 20);
     
+        //Get the bitmap block
         dataBitmapBlock = diskRead(dataBitmapIndex);
         dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
 
-        indirectPointer = diskRead(dataBlockIndex);
+        indirectPointer = diskRead(indirectDataBlockIndex);
 
         //Keep assigning blocks until either blocks run out or string runs out.
         for(int i = 0; i < BLOCK_SIZE / 4; i++)
