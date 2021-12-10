@@ -534,9 +534,9 @@ void writeFile(char ***parsedCommandPtr)
     else
     {
 
-        //TODO temporary fix, need to still adjust file size properly.
-        printf("New file has been created with size %d blocks.\n", fileBlockCount);
-        return;
+        // //TODO temporary fix, need to still adjust file size properly.
+        // printf("New file has been created with size %d blocks.\n", fileBlockCount);
+        // return;
     }
 
     // char *dataBitmapBlock = diskRead(dataBitmapIndex);
