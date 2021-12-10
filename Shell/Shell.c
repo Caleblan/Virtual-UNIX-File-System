@@ -665,7 +665,7 @@ void deleteFile(char ***parsedCommandPtr)
             dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 8));
             char dataBitmap[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-            diskWrite(2 + getInodeCount, dataBitmapBlock);
+            diskWrite(2 + getInodeCount, dataBitmap);
             free(dataBitmapBlock);
         }
     }
