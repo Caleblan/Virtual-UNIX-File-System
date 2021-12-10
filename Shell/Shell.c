@@ -651,22 +651,19 @@ void deleteFile(char ***parsedCommandPtr)
     char *inode = diskRead(2 + inodeIndex);
     
     //Clear all the data pointers (4 direct and indirect)
-    for(int i = 1; i <= 4; i++)
+    for(int i = 1; i <= 5; i++)
     {
-
-        //TODO change counter to clear indirect pointer.
-
         //Get pointer from four bytes.
         unsigned int pointer = extractValue(&inode, i * 4);
         printf("Pointer value: %d\n", pointer);
 
-        //If address has been set, go clear that location 
+        //If address has been set, go unallocate the pointer
         if(pointer > 0)
         {
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount);
             dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 8));
-            diskWrite(2 + getInodeCount, inodeBitmapBlock);
+            diskWrite(2 + getInodeCount, dataBitmapBlock);
             free(dataBitmapBlock);
         }
     }
