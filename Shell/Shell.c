@@ -502,7 +502,6 @@ void writeFile(char ***parsedCommandPtr)
         }
     }
 
-    unsigned int dataBlockIndex;
 
     //If there is still more characters in the string, allocate a datablock of addresses and fill them.
     if(strlen(newString) > 0)
@@ -511,7 +510,7 @@ void writeFile(char ***parsedCommandPtr)
 
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-        //dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+        unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
 
         //Write new dataGroupBitmap to disk.
         char dataBitmap[BLOCK_SIZE] = {0};
@@ -528,7 +527,7 @@ void writeFile(char ***parsedCommandPtr)
         }
 
         //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
-        compressValue(&inode , inodeIndex, 20);
+        compressValue(&inode , dataBlockIndex, 20);
     
         // char *dataBitmapBlock = diskRead(dataBitmapIndex);
         // int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
@@ -573,6 +572,12 @@ void writeFile(char ***parsedCommandPtr)
         //         newString += stringLenth;
         //     }
         // }
+
+        //If the string length is still greater, clip file as there are no more data blocks to use.
+        if(strlen(newString) > 0)
+        {
+            printf("File exceeds maximum block size so file has been clipped.\n");
+        }
     }
 
     // //Write indirect pointer block onto disk.
@@ -589,12 +594,6 @@ void writeFile(char ***parsedCommandPtr)
     memcpy(&inodeArr, inode, BLOCK_SIZE);
     diskWrite(2 + inodeIndex, inodeArr);
     free(inode);
-
-    //If the string length is still greater, clip file as there are no more data blocks to use.
-    if(strlen(newString) > 0)
-    {
-        printf("File exceeds maximum block size so file has been clipped.\n");
-    }
     
     printf("New file has been created with size %d blocks.\n", fileBlockCount);
 }
