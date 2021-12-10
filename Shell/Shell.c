@@ -589,7 +589,6 @@ void writeFile(char ***parsedCommandPtr)
 
 
             printf("Middle data disk write\n");
-            memcpy(&dataBlock, newString, BLOCK_SIZE);
             diskWrite(dataBlockIndex, dataBlock);
 
             //Split inode count into four chars and put address into indirect block.
