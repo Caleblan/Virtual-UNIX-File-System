@@ -504,7 +504,7 @@ void writeFile(char ***parsedCommandPtr)
 
     unsigned int dataBlockIndex;
 
-    //If there is still more characters in the string, allocate a datablock of addresses.
+    //If there is still more characters in the string, allocate a datablock of addresses and fill them.
     if(strlen(newString) > 0)
     {
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
@@ -528,64 +528,57 @@ void writeFile(char ***parsedCommandPtr)
 
         //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
         compressValue(&inode , inodeIndex, 24);
-    }
-    else
-    {
+    
+        // char *dataBitmapBlock = diskRead(dataBitmapIndex);
+        // int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
 
-        // //TODO temporary fix, need to still adjust file size properly.
-        // printf("New file has been created with size %d blocks.\n", fileBlockCount);
-        // return;
-    }
+        char *indirectPointer = diskRead(dataBlockIndex);
 
-    // char *dataBitmapBlock = diskRead(dataBitmapIndex);
-    // int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-
-    char *indirectPointer = diskRead(dataBlockIndex);
-
-    //Keep assigning blocks until either blocks run out or string runs out.
-    for(int i = 0; i < BLOCK_SIZE / 4; i++)
-    {
-        stringLenth = strlen(newString);
-
-        //If string has run out before going through all blocks, leave loop.
-        if(strlen(newString) == 0)
+        //Keep assigning blocks until either blocks run out or string runs out.
+        for(int i = 0; i < BLOCK_SIZE / 4; i++)
         {
-            break;
-        }
+            stringLenth = strlen(newString);
 
-        //Set datablock pointer.
-        char *dataBitmapBlock = diskRead(dataBitmapIndex);
-        int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-        free(dataBitmapBlock);
-        
-        //If no open position on first
-        if(dataBitmapIndex == -1)
-        {
-            printf("No more data blocks are available.\n");
+            //If string has run out before going through all blocks, leave loop.
+            if(strlen(newString) == 0)
+            {
+                break;
+            }
+
+            //Set datablock pointer.
+            char *dataBitmapBlock = diskRead(dataBitmapIndex);
+            int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
             free(dataBitmapBlock);
-            return;
-        }
+            
+            //If no open position on first
+            if(dataBitmapIndex == -1)
+            {
+                printf("No more data blocks are available.\n");
+                free(dataBitmapBlock);
+                return;
+            }
 
-        //Split inode count into four chars.
-        compressValue(&indirectPointer , inodeIndex, (i + 1) * 4);
+            //Split inode count into four chars.
+            compressValue(&indirectPointer , inodeIndex, (i + 1) * 4);
 
-        fileBlockCount++;
+            fileBlockCount++;
 
-        if(stringLenth > BLOCK_SIZE)
-        {
-            newString += BLOCK_SIZE;
-        }
-        else
-        {
-            newString += stringLenth;
+            if(stringLenth > BLOCK_SIZE)
+            {
+                newString += BLOCK_SIZE;
+            }
+            else
+            {
+                newString += stringLenth;
+            }
         }
     }
 
-    //Write indirect pointer block onto disk.
-    char indirectPtr[BLOCK_SIZE] = {0};
-    memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
-    diskWrite(dataBlockIndex , indirectPtr);
-    free(indirectPointer);
+    // //Write indirect pointer block onto disk.
+    // char indirectPtr[BLOCK_SIZE] = {0};
+    // memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
+    // diskWrite(dataBlockIndex , indirectPtr);
+    // free(indirectPointer);
 
     //Split fileSize into four chars for inode.
     compressValue(&inode , fileBlockCount, 0);
@@ -596,11 +589,11 @@ void writeFile(char ***parsedCommandPtr)
     diskWrite(2 + inodeIndex, inodeArr);
     free(inode);
 
-    //If the string length is still greater, clip file as there are no more data blocks to use.
-    if(strlen(newString) > 0)
-    {
-        printf("File exceeds maximum block size so file has been clipped.\n");
-    }
+    // //If the string length is still greater, clip file as there are no more data blocks to use.
+    // if(strlen(newString) > 0)
+    // {
+    //     printf("File exceeds maximum block size so file has been clipped.\n");
+    // }
     
     printf("New file has been created with size %d blocks.\n", fileBlockCount);
 }
