@@ -35,7 +35,7 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         disk2[i] = data[counter++];
-        printf("Index: %d , [%c, %d]\n", i, disk2[i], disk[i]);
+        printf("Index: %d , [%c, %d]\n", i, disk2[i], disk2[i]);
     }
 
     printf("\n");    
