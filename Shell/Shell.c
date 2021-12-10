@@ -592,7 +592,7 @@ void writeFile(char ***parsedCommandPtr)
             diskWrite(dataBlockIndex, dataBlock);
 
             //Split inode count into four chars and put address into indirect block.
-            compressValue(&indirectPointer , dataBitmapIndex, i * 4);
+            compressValue(&indirectPointer , dataBlockIndex, i * 4);
 
             fileBlockCount++;
         }
