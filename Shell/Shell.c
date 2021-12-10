@@ -486,15 +486,8 @@ void writeFile(char ***parsedCommandPtr)
                 newString += stringLenth;
             }
 
-            // //Split data block counter to 4 bytes.
-            // inode[((i + 1) * 4)] = (dataBlockIndex >> 24) & 0xFF;
-            // inode[((i + 1) * 4) + 1] = (dataBlockIndex >> 16) & 0xFF;
-            // inode[((i + 1) * 4) + 2] = (dataBlockIndex >> 8) & 0xFF;
-            // inode[((i + 1) * 4) + 3] = dataBlockIndex & 0xFF;
-
+            //Split data block counter to 4 bytes.
             compressValue(&inode , dataBlockIndex, (i + 1) * 4);
-
-            
 
             fileBlockCount++;
         }
@@ -535,12 +528,7 @@ void writeFile(char ***parsedCommandPtr)
             return;
         }
 
-        // //Sets indirect pointer for inode. Note: Indexs are realtive, so you have to add a base to it when reading.
-        // inode[16] = (inodeIndex >> 24) & 0xFF;
-        // inode[17] = (inodeIndex >> 16) & 0xFF;
-        // inode[18] = (inodeIndex >> 8) & 0xFF;
-        // inode[19] = inodeIndex & 0xFF;
-
+        //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
         compressValue(&inode , inodeIndex, 16);
     }
     else
@@ -580,12 +568,7 @@ void writeFile(char ***parsedCommandPtr)
             return;
         }
 
-        // //Split inode count into four chars.
-        // indirectPointer[((i + 1) * 4)] = (inodeIndex >> 24) & 0xFF;
-        // indirectPointer[((i + 1) * 4) + 1] = (inodeIndex >> 16) & 0xFF;
-        // indirectPointer[((i + 1) * 4) + 2] = (inodeIndex >> 8) & 0xFF;
-        // indirectPointer[((i + 1) * 4) + 3] = inodeIndex & 0xFF;
-
+        //Split inode count into four chars.
         compressValue(&indirectPointer , inodeIndex, (i + 1) * 4);
 
         fileBlockCount++;
@@ -607,11 +590,6 @@ void writeFile(char ***parsedCommandPtr)
     free(indirectPointer);
 
     //Split fileSize into four chars for inode.
-    // inode[0] = (fileBlockCount >> 24) & 0xFF;
-    // inode[1] = (fileBlockCount >> 16) & 0xFF;
-    // inode[2] = (fileBlockCount >> 8) & 0xFF;
-    // inode[3] = fileBlockCount & 0xFF;
-
     compressValue(&inode , fileBlockCount, 0);
 
     //Write inode to disk.
@@ -694,9 +672,6 @@ void deleteFile(char ***parsedCommandPtr)
         //If address has been set, go clear that location 
         if(pointer > 0)
         {
-
-
-
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount);
             dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 8));
@@ -712,10 +687,6 @@ unsigned int getInodeCount()
 {
     //Get inode count from superblock.
     char *metaData = diskRead(0);   
-    // unsigned int inodeCount = (int) (metaData[8] << 24);
-    // inodeCount += (int) (metaData[9] << 16);
-    // inodeCount += (int) (metaData[10] << 8);
-    // inodeCount += (int) metaData[11];
     unsigned int inodeCount = extractValue(&metaData, 8);
     free(metaData);
 
@@ -751,6 +722,11 @@ void compressValue(char **dataPtr , unsigned int value, unsigned int index)
     data[index + 1] = (value >> 16) & 0xFF;
     data[index + 2] = (value >> 8) & 0xFF;
     data[index + 3] = value & 0xFF;
+
+    printf("[%c, %d]\n", data[index], data[index]);
+    printf("[%c, %d]\n", data[index + 1], data[index + 1]);
+    printf("[%c, %d]\n", data[index + 2], data[index + 2]);
+    printf("[%c, %d]\n", data[index + 3], data[index + 3]);
 }
 
 /**
