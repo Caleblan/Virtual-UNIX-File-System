@@ -561,12 +561,6 @@ void writeFile(char ***parsedCommandPtr)
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + getInodeCount(), dataBitmap);
 
-            //Put part of string into data block
-            unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
-            char dataBlock[BLOCK_SIZE] = {0};
-            memcpy(&dataBlock, newString, BLOCK_SIZE);
-            diskWrite(dataBlockIndex, dataBlock);
-
             //If no open position on first
             if(dataBitmapIndex == -1)
             {
@@ -574,6 +568,14 @@ void writeFile(char ***parsedCommandPtr)
                 free(indirectPointer);
                 return;
             }
+
+            printf("Before data disk write\n");
+            //Put part of string into data block
+            unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+            char dataBlock[BLOCK_SIZE] = {0};
+            printf("Middle data disk write\n");
+            memcpy(&dataBlock, newString, BLOCK_SIZE);
+            diskWrite(dataBlockIndex, dataBlock);
 
             //Split inode count into four chars and put address into indirect block.
             compressValue(&indirectPointer , dataBitmapIndex, i * 4);
