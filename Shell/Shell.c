@@ -660,6 +660,8 @@ void deleteFile(char ***parsedCommandPtr)
         //If address has been set, go unallocate the pointer
         if(pointer > 0)
         {
+            printf("Inode Count %d\n", 2 + getInodeCount());
+
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount);
             dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 8));
