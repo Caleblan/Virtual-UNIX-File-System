@@ -558,8 +558,12 @@ void writeFile(char ***parsedCommandPtr)
             dataBitmapBlock = diskRead(dataBitmapIndex);
             dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+            //Put part of string into data block
+            char dataBlock[BLOCK_SIZE] = {0};
+            memcpy(&dataBlock, dataBitmapBlock, BLOCK_SIZE);
+            diskWrite(dataBlockIndex, dataBlock);
             free(dataBitmapBlock);
-            
+
             //If no open position on first
             if(dataBitmapIndex == -1)
             {
@@ -568,7 +572,7 @@ void writeFile(char ***parsedCommandPtr)
                 return;
             }
 
-            //Split inode count into four chars.
+            //Split inode count into four chars and put address into indirect block.
             compressValue(&indirectPointer , dataBitmapIndex, i * 4);
 
             fileBlockCount++;
