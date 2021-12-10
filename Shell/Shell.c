@@ -335,12 +335,12 @@ void writeFile(char ***parsedCommandPtr)
 
     if(parsedCommand[1] == NULL || parsedCommand[2] == NULL)
     {
-        printf("Too few arguements. Command should follow form \'delete_file [unsigned int arguement] [String]\'.\n");
+        printf("Too few arguements. Command should follow form \'write_file [unsigned int arguement] [String]\'.\n");
         return;
     }
     else if(parsedCommand[3] != NULL)
     {
-        printf("Too many arguements. Command should follow form \'delete_file [unsigned int arguement]\'.\n");
+        printf("Too many arguements. Command should follow form \'write_file [unsigned int arguement] [String]\'.\n");
         return;
     }
 
@@ -480,75 +480,75 @@ void writeFile(char ***parsedCommandPtr)
     // char *dataBitmapBlock = diskRead(dataBitmapIndex);
     // int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
 
-    // char *indirectPointer = diskRead(dataBlockIndex);
+    char *indirectPointer = diskRead(dataBlockIndex);
 
-    // //Keep assigning blocks until either blocks run out or string runs out.
-    // for(int i = 0; i < BLOCK_SIZE / 4; i++)
-    // {
-    //     stringLenth = strlen(newString);
+    //Keep assigning blocks until either blocks run out or string runs out.
+    for(int i = 0; i < BLOCK_SIZE / 4; i++)
+    {
+        stringLenth = strlen(newString);
 
-    //     //If string has run out before going through all blocks, leave loop.
-    //     if(strlen(newString) == 0)
-    //     {
-    //         break;
-    //     }
+        //If string has run out before going through all blocks, leave loop.
+        if(strlen(newString) == 0)
+        {
+            break;
+        }
 
-    //     //Set datablock pointer.
-    //     char *dataBitmapBlock = diskRead(dataBitmapIndex);
-    //     int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-    //     free(dataBitmapBlock);
+        //Set datablock pointer.
+        char *dataBitmapBlock = diskRead(dataBitmapIndex);
+        int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
+        free(dataBitmapBlock);
         
-    //     //If no open position on first
-    //     if(dataBitmapIndex == -1)
-    //     {
-    //         printf("No more data blocks are available.\n");
-    //         free(dataBitmapBlock);
-    //         return;
-    //     }
+        //If no open position on first
+        if(dataBitmapIndex == -1)
+        {
+            printf("No more data blocks are available.\n");
+            free(dataBitmapBlock);
+            return;
+        }
 
-    //     //Split inode count into four chars.
-    //     indirectPointer[((i + 1) * 4)] = (inodeIndex >> 24) & 0xFF;
-    //     indirectPointer[((i + 1) * 4) + 1] = (inodeIndex >> 16) & 0xFF;
-    //     indirectPointer[((i + 1) * 4) + 2] = (inodeIndex >> 8) & 0xFF;
-    //     indirectPointer[((i + 1) * 4) + 3] = inodeIndex & 0xFF;
+        //Split inode count into four chars.
+        indirectPointer[((i + 1) * 4)] = (inodeIndex >> 24) & 0xFF;
+        indirectPointer[((i + 1) * 4) + 1] = (inodeIndex >> 16) & 0xFF;
+        indirectPointer[((i + 1) * 4) + 2] = (inodeIndex >> 8) & 0xFF;
+        indirectPointer[((i + 1) * 4) + 3] = inodeIndex & 0xFF;
 
-    //     fileBlockCount++;
+        fileBlockCount++;
 
-    //     if(stringLenth > BLOCK_SIZE)
-    //     {
-    //         newString += BLOCK_SIZE;
-    //     }
-    //     else
-    //     {
-    //         newString += stringLenth;
-    //     }
-    // }
+        if(stringLenth > BLOCK_SIZE)
+        {
+            newString += BLOCK_SIZE;
+        }
+        else
+        {
+            newString += stringLenth;
+        }
+    }
 
-    // //Write indirect pointer block onto disk.
-    // char indirectPtr[BLOCK_SIZE] = {0};
-    // memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
-    // diskWrite(dataBlockIndex , indirectPtr);
-    // free(indirectPointer);
+    //Write indirect pointer block onto disk.
+    char indirectPtr[BLOCK_SIZE] = {0};
+    memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
+    diskWrite(dataBlockIndex , indirectPtr);
+    free(indirectPointer);
 
-    // //Split fileSize into four chars for inode.
-    // inode[0] = (fileBlockCount >> 24) & 0xFF;
-    // inode[1] = (fileBlockCount >> 16) & 0xFF;
-    // inode[2] = (fileBlockCount >> 8) & 0xFF;
-    // inode[3] = fileBlockCount & 0xFF;
+    //Split fileSize into four chars for inode.
+    inode[0] = (fileBlockCount >> 24) & 0xFF;
+    inode[1] = (fileBlockCount >> 16) & 0xFF;
+    inode[2] = (fileBlockCount >> 8) & 0xFF;
+    inode[3] = fileBlockCount & 0xFF;
 
-    // //Write inode to disk.
-    // char inodeArr[BLOCK_SIZE] = {0};
-    // memcpy(&inodeArr, inode, BLOCK_SIZE);
-    // diskWrite(2 + inodeIndex, inodeArr);
-    // free(inode);
+    //Write inode to disk.
+    char inodeArr[BLOCK_SIZE] = {0};
+    memcpy(&inodeArr, inode, BLOCK_SIZE);
+    diskWrite(2 + inodeIndex, inodeArr);
+    free(inode);
 
-    // //If the string length is still greater, clip file as there are no more data blocks to use.
-    // if(strlen(newString) > 0)
-    // {
-    //     printf("File exceeds maximum block size so file has been clipped.\n");
-    // }
+    //If the string length is still greater, clip file as there are no more data blocks to use.
+    if(strlen(newString) > 0)
+    {
+        printf("File exceeds maximum block size so file has been clipped.\n");
+    }
     
-    // printf("New file has been created with size %d blocks.\n", fileBlockCount);
+    printf("New file has been created with size %d blocks.\n", fileBlockCount);
 }
 
 
@@ -596,7 +596,10 @@ void deleteFile(char ***parsedCommandPtr)
     //Used to deallocate inode in inodeBitmap.
     char *inodeBitmapBlock = diskRead(1);
     inodeBitmapBlock[inodeIndex / 8] ^= 0b10000000 >> (inodeIndex % 7);
-    diskWrite(1, inodeBitmapBlock);
+    //Write indirect pointer block onto disk.
+    char indirectPtr[BLOCK_SIZE] = {0};
+    memcpy(&indirectPtr, inodeBitmapBlock, BLOCK_SIZE);
+    diskWrite(1, indirectPtr);
     free(inodeBitmapBlock);
 
 
@@ -617,9 +620,12 @@ void deleteFile(char ***parsedCommandPtr)
         //If address has been set, go clear that location 
         if(pointer > 0)
         {
+
+
+
             //Unallocate datablock corresponding to pointer.
             char *dataBitmapBlock = diskRead(2 + getInodeCount);
-            dataBitmapBlock[pointer / 8] ^= 0b10000000 >> (pointer % 7);
+            dataBitmapBlock[pointer / 8] ^= (0b10000000 >> (pointer % 7)) ^ 0b01111111;
             diskWrite(2 + getInodeCount, inodeBitmapBlock);
             free(dataBitmapBlock);
         }
@@ -738,7 +744,7 @@ int bitmapSearch(char **bitmapBlock)
  */
 void formatDisk()
 {
-    char metaData[128];
+    char metaData[128] = {0};
 
     //Split Magic Number (int) into four bytes.
     metaData[0] = (MAGIC_NUMBER >> 24) & 0xFF;
@@ -770,13 +776,26 @@ void formatDisk()
     metaData[10] = (inodeCount >> 8) & 0xFF;
     metaData[11] = inodeCount & 0xFF;
 
-    //Set all remaining values to zero
-    for(int i = 12; i < BLOCK_SIZE; i++)
-    {
-        metaData[i] = 0;
-    }
+    printf("%d, %c\n", metaData[11], metaData[0]);
+    printf("%d, %c\n", metaData[11], metaData[1]);
+    printf("%d, %c\n", metaData[11], metaData[2]);
+    printf("%d, %c\n", metaData[11], metaData[3]);
+    printf("%d, %c\n", metaData[11], metaData[4]);
+    printf("%d, %c\n", metaData[11], metaData[5]);
+    printf("%d, %c\n", metaData[11], metaData[6]);
+    printf("%d, %c\n", metaData[11], metaData[7]);
+    printf("%d, %c\n", metaData[11], metaData[8]);
+    printf("%d, %c\n", metaData[11], metaData[9]);
+    printf("%d, %c\n", metaData[11], metaData[10]);
+    printf("%d, %c\n", metaData[11], metaData[11]);
+
 
     diskWrite(0, metaData);
+
+
+
+    //Calculate how many datablockBitmaps we need.
+    int datablockBitampCount = diskBlocks - (2 + inodeCount) / (BLOCK_SIZE * 8);
 
     //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values initially.
 
