@@ -529,7 +529,7 @@ void writeFile(char ***parsedCommandPtr)
         }
 
         //Sets indirect pointer for inode. Note: Indexs are relative, so you have to add a base to it when reading.
-        compressValue(&inode , dataBlockIndex, 20);
+        compressValue(&inode , indirectDataBlockIndex, 20);
     
         dataBitmapBlock = diskRead(dataBitmapIndex);
         dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
