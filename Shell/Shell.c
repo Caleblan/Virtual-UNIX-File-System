@@ -554,15 +554,18 @@ void writeFile(char ***parsedCommandPtr)
                 break;
             }
 
-            //Set datablock pointer.
+            //Set datablock bitmap.
             dataBitmapBlock = diskRead(dataBitmapIndex);
             dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
-            unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
-            //Put part of string into data block
-            char dataBlock[BLOCK_SIZE] = {0};
-            memcpy(&dataBlock, newString, BLOCK_SIZE);
-            diskWrite(dataBlockIndex, dataBlock);
-            free(dataBitmapBlock);
+            char dataBitmap[BLOCK_SIZE] = {0};
+            memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
+            diskWrite(2 + getInodeCount(), dataBitmap);
+
+            // //Put part of string into data block
+            // unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+            // char dataBlock[BLOCK_SIZE] = {0};
+            // memcpy(&dataBlock, newString, BLOCK_SIZE);
+            // diskWrite(dataBlockIndex, dataBlock);
 
             //If no open position on first
             if(dataBitmapIndex == -1)
