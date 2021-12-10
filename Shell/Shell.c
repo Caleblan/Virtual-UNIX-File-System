@@ -479,15 +479,14 @@ void writeFile(char ***parsedCommandPtr)
             if(strlen(newString) > BLOCK_SIZE)
             {
                 memcpy(&blockData, newString, BLOCK_SIZE);
-                diskWrite(dataBlockIndex, blockData);
                 newString += BLOCK_SIZE;
             }
             else
             {
                 memcpy(&blockData, newString, stringLenth);
-                diskWrite(dataBlockIndex, blockData);
                 newString += stringLenth;
             }
+            diskWrite(dataBlockIndex, blockData);
 
             //Split data block counter to 4 bytes.
             compressValue(&inode , dataBlockIndex, (i + 1) * 4);
@@ -573,6 +572,9 @@ void writeFile(char ***parsedCommandPtr)
             printf("Before data disk write\n");
             //Put part of string into data block
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+
+            printf("%d\n", );
+
             char dataBlock[BLOCK_SIZE] = {0};
 
             //Increment pointer. We don't want to increment more than length of string or else 
@@ -828,6 +830,7 @@ int bitmapSearch(char **bitmapBlock)
             {
                 //Set bit value using bitmask so inode is marked as used.
                 inodeBitmapBlock[index] ^= bitMask;
+                printf("Bitmap: %d\n", inodeBitmapBlock[index]);
                 availableSpot = true;
                 break;
             }
