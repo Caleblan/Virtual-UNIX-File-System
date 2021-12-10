@@ -536,9 +536,9 @@ void writeFile(char ***parsedCommandPtr)
     
 
     
-        //Get the bitmap block at zero
-        dataBitmapBlock = diskRead(inodeCount + 3 + dataBitmapIndex);
-        dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
+        // //Get the bitmap block at zero
+        // dataBitmapBlock = diskRead(inodeCount + 3 + dataBitmapIndex);
+        // dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
 
         //Get the block pointer.
         indirectPointer = diskRead(indirectDataBlockIndex);
