@@ -721,7 +721,7 @@ void deleteFile(char ***parsedCommandPtr)
         //TODO get indirect block pointer value.
 
         //Get address
-        pointer = extractValue(&inode, counter + 4);
+        pointer = extractValue(&pointerDataBlock, counter + 4);
 
 
 
@@ -740,6 +740,7 @@ void deleteFile(char ***parsedCommandPtr)
     }
 
     free(pointerDataBlock);
+    free(inode);
 
     printf("File with inode %d has been deleted.\n", inodeIndex);
 }
