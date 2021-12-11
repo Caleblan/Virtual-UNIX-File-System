@@ -343,7 +343,7 @@ void makeFile(char ***parsedCommandPtr)
         return;
     }
 
-    int directoryInodeIndex = atoi(parsedCommand[2]);
+    int directoryInodeIndex = atoi(parsedCommand[1]);
 
     if (directoryInodeIndex < 0)
     {
@@ -374,7 +374,7 @@ void makeFile(char ***parsedCommandPtr)
     free(inodeBitampBlock);
 
     //Add file to directory
-    char *directoryInode = diskRead(2 + directoryInode);
+    char *directoryInode = diskRead(2 + directoryInodeIndex);
 
     //Add a file to inode pointer
     for (int i = 1; i <= 5; i++)
@@ -419,7 +419,7 @@ void makeFile(char ***parsedCommandPtr)
 
     char directoryBlock[BLOCK_SIZE] = {0};
     memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
-    diskWrite(inodeIndex, 2 + directoryInodeIndex);
+    diskWrite(2 + directoryInodeIndex, directoryBlock);
 
     free(directoryInode);
     printf("File with inode index %d has been added to directory with inode index %d\n", inodeIndex, directoryInodeIndex);
