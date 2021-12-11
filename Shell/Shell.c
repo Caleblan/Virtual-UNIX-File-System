@@ -740,7 +740,7 @@ void deleteFile(char ***parsedCommandPtr)
     }
 
     free(pointerDataBlock);
-    free(inode);
+    // free(inode);
 
     printf("File with inode %d has been deleted.\n", inodeIndex);
 }
