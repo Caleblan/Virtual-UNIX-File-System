@@ -604,16 +604,16 @@ void writeFile(char ***parsedCommandPtr)
             printf("File exceeds maximum block size so file has been clipped.\n");
         }
 
+        printf("IndirectBlock disk write\n");
+
+        //Write indirect pointer block onto disk.
+        char indirectPtr[BLOCK_SIZE] = {0};
+        memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
+        diskWrite(indirectDataBlockIndex , indirectPtr);
+        free(indirectPointer);
+
         free(dataBitmapBlock);
     }
-
-    printf("IndirectBlock disk write\n");
-
-    // //Write indirect pointer block onto disk.
-    char indirectPtr[BLOCK_SIZE] = {0};
-    memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
-    diskWrite(indirectDataBlockIndex , indirectPtr);
-    free(indirectPointer);
 
     //Split fileSize into four chars for inode.
     compressValue(&inode , fileBlockCount, 0);
