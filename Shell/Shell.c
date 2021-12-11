@@ -357,7 +357,7 @@ void makeFile(char ***parsedCommandPtr)
         return;
     }
     //If directory inode is not allocated
-    else if((inodeBitampBlock[directoryInodeIndex / 8] ^ (0b10000000 >> (directoryInodeIndex % 8))) == 0)
+    else if((inodeBitampBlock[directoryInodeIndex / 8] & (0b10000000 >> (directoryInodeIndex % 8))) == 0)
     {
         printf("Cannot use inode %d since it is already allocated to a directory.\n", directoryInodeIndex);
         free(inodeBitampBlock);
@@ -980,10 +980,39 @@ void createDirectory(char ***parsedCommandPtr)
     {
         char **parsedCommand = *parsedCommandPtr;
 
-        if (parsedCommand[1] != NULL)
+        if(parsedCommand[1] == NULL)
         {
-            printf("Too many arguements. Command should follow form \'create_directory\'.\n");
+            printf("Too few arguements. Command should follow form \'create_directory [inode index integer]\'.\n");
             return;
+        }
+        else if (parsedCommand[2] != NULL)
+        {
+            printf("Too many arguements. Command should follow form \'create_directory [inode index integer]\'.\n");
+            return;
+        }
+        //
+        else
+        {
+            int directoryInodeIndex = atoi(parsedCommand[1]);
+
+            //Get inodeBitmapBlock and check if spot is open
+            char *inodeBitampBlock = diskRead(1);
+            
+            if (directoryInodeIndex < 0)
+            {
+                printf("Invalid inode value.\n");
+                free(inodeBitampBlock);
+                return;
+            }
+            //If directory inode is not allocated
+            else if((inodeBitampBlock[directoryInodeIndex / 8] & (0b10000000 >> (directoryInodeIndex % 8))) == 0)
+            {
+                printf("Cannot use inode %d since it is already allocated to a directory.\n", directoryInodeIndex);
+                free(inodeBitampBlock);
+                return;
+            }
+
+            free(inodeBitampBlock);
         }
     }
 
