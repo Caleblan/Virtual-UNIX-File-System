@@ -719,7 +719,7 @@ void deleteFile(char ***parsedCommandPtr)
         //TODO get indirect block pointer value.
 
         //Get address of data block.
-        pointer = extractValue(&pointerDataBlock, counter + 4);
+        pointer = extractValue(&pointerDataBlock, counter * 4);
 
 
         //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
