@@ -672,20 +672,23 @@ void deleteFile(char ***parsedCommandPtr)
     //Used to deallocate inode in inodeBitmap.
     char *inodeBitmapBlock = diskRead(1);
     inodeBitmapBlock[inodeIndex / 8] ^= 0b10000000 >> (inodeIndex % 8);
-    //Write indirect pointer block onto disk.
-    char indirectPtr[BLOCK_SIZE] = {0};
-    memcpy(&indirectPtr, inodeBitmapBlock, BLOCK_SIZE);
-    diskWrite(1, indirectPtr);
+    
+    //Remove indirect pointer block onto disk.
+    char inodeBitmap[BLOCK_SIZE] = {0};
+    memcpy(&inodeBitmap, inodeBitmapBlock, BLOCK_SIZE);
+    diskWrite(1, inodeBitmap);
     free(inodeBitmapBlock);
 
 
     char *inode = diskRead(2 + inodeIndex);
+
+    unsigned int pointer = 0;
     
     //Clear all the data pointers (4 direct and indirect)
     for(int i = 1; i <= 5; i++)
     {
         //Get pointer from four bytes.
-        unsigned int pointer = extractValue(&inode, i * 4);
+        pointer = extractValue(&inode, i * 4);
         printf("Pointer value: %d\n", pointer);
 
         //If address has been set, go unallocate the pointer
@@ -695,40 +698,49 @@ void deleteFile(char ***parsedCommandPtr)
             printf("DataBlock index %d\n", pointer - (3 + inodeCount));
 
             //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
-            char *dataBitmapBlock = diskRead(2 + getInodeCount());
+            char *dataBitmapBlock = diskRead(2 + inodeCount);
             unsigned int dataBlockIndex = pointer - (3 + inodeCount);
             dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
             char dataBitmap[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-            diskWrite(2 + getInodeCount(), dataBitmap);
+            diskWrite(2 + inodeCount, dataBitmap);
             free(dataBitmapBlock);
         }
     }
     
-    // //Calculate how much of the file is still in indriect pointer
-    // int remainingFileSize = extractValue(&inode, 0) - 4;
+    //Calculate how much of the file is still in indirect pointer
+    int remainingFileSize = extractValue(&inode, 0) - 4;
 
-    // //If there are any pointers in indirect pointer block, deallocate them in bitmap
-    // while(remainingFileSize > 0)
-    // {
-    //     //TODO get indirect block pointer value
+    //Get the pointer datablock.
+    char *pointerDataBlock = diskRead(pointer);
 
-    //     //Get address
-    //     //unsigned int pointer = extractValue(&inode, i * 4);
+    int counter = 0;
 
-    //     printf("%d\n.");
+    //If there are any pointers in indirect pointer block, deallocate them in bitmap
+    while(remainingFileSize > 0)
+    {
+        //TODO get indirect block pointer value.
 
-    //     //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
-    //     char *dataBitmapBlock = diskRead(2 + getInodeCount());
-    //     unsigned int dataBlockIndex = pointer - (3 + inodeCount);
-    //     dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
-    //     char dataBitmap[BLOCK_SIZE] = {0};
-    //     memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-    //     diskWrite(2 + getInodeCount(), dataBitmap);
-    //     free(dataBitmapBlock);
+        //Get address
+        pointer = extractValue(&inode, counter + 4);
 
-    //     remainingFileSize--;
-    // }
+
+
+        //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
+        char *dataBitmapBlock = diskRead(2 + inodeCount);
+        unsigned int dataBlockIndex = pointer - (3 + inodeCount);
+        dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
+        char dataBitmap[BLOCK_SIZE] = {0};
+        memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
+        diskWrite(2 + getInodeCount(), dataBitmap);
+        free(dataBitmapBlock);
+
+        //Decerement do we can end loop sometime.
+        remainingFileSize--;
+        counter++;
+    }
+
+    free(pointerDataBlock);
 
     printf("File with inode %d has been deleted.\n", inodeIndex);
 }
