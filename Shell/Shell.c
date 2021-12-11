@@ -718,18 +718,16 @@ void deleteFile(char ***parsedCommandPtr)
     {
         //TODO get indirect block pointer value.
 
-        printf("Before Pointer block\n");
-
-        //Get address
+        //Get address of data block.
         pointer = extractValue(&pointerDataBlock, counter + 4);
 
-        printf("After Pointer block\n");
-
-        
 
         //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
         char *dataBitmapBlock = diskRead(2 + inodeCount);
         unsigned int dataBlockIndex = pointer - (3 + inodeCount);
+
+        printf("dataBlockIndex %d Pointer: %d\n", dataBitmapIndex, pointer);
+
         dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
         char dataBitmap[BLOCK_SIZE] = {0};
         memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
