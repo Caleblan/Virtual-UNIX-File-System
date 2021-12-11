@@ -345,14 +345,25 @@ void makeFile(char ***parsedCommandPtr)
 
     int directoryInodeIndex = atoi(parsedCommand[1]);
 
+    //Get inodeBitmapBlock and check if spot is open
+    char *inodeBitampBlock = diskRead(1);
+    
+
+
     if (directoryInodeIndex < 0)
     {
         printf("Invalid inode value.\n");
+        free(inodeBitampBlock);
         return;
     }
+    //If directory inode is not allocated
+    else if((inodeBitampBlock[directoryInodeIndex / 8] ^ (0b10000000 >> (directoryInodeIndex % 8))) == 0)
+    {
+        printf("Directory with inode value %d is not currently alloacted.\n", directoryInodeIndex);
+        free(inodeBitampBlock);
+        return
+    }
 
-    //Get inodeBitmapBlock and check if spot is open
-    char *inodeBitampBlock = diskRead(1);
     int inodeIndex = bitmapSearch(&inodeBitampBlock);
 
     unsigned int inodeCount = getInodeCount();
