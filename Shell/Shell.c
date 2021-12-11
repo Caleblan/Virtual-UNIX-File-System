@@ -726,7 +726,7 @@ void deleteFile(char ***parsedCommandPtr)
         char *dataBitmapBlock = diskRead(2 + inodeCount);
         unsigned int dataBlockIndex = pointer - (3 + inodeCount);
 
-        printf("dataBlockIndex %d Pointer: %d\n", dataBitmapIndex, pointer);
+        printf("dataBlockIndex %d Pointer: %d\n", dataBlockIndex, pointer);
 
         dataBitmapBlock[dataBlockIndex / 8] ^= (0b10000000 >> (dataBlockIndex % 8));
         char dataBitmap[BLOCK_SIZE] = {0};
