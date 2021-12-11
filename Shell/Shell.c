@@ -361,7 +361,7 @@ void makeFile(char ***parsedCommandPtr)
     {
         printf("Directory with inode value %d is not currently alloacted.\n", directoryInodeIndex);
         free(inodeBitampBlock);
-        return
+        return;
     }
 
     int inodeIndex = bitmapSearch(&inodeBitampBlock);
