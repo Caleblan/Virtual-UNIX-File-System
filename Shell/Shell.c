@@ -567,7 +567,6 @@ void writeFile(char ***parsedCommandPtr)
                 return;
             }
 
-
             printf("Before data disk write\n");
             //Put part of string into data block
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
@@ -612,7 +611,7 @@ void writeFile(char ***parsedCommandPtr)
         diskWrite(indirectDataBlockIndex , indirectPtr);
         free(indirectPointer);
 
-        free(dataBitmapBlock);
+        free(indirectPointer);
     }
 
     //Split fileSize into four chars for inode.
