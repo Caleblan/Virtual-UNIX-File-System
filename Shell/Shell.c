@@ -610,8 +610,6 @@ void writeFile(char ***parsedCommandPtr)
         memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
         diskWrite(indirectDataBlockIndex , indirectPtr);
         free(indirectPointer);
-
-        free(indirectPointer);
     }
 
     //Split fileSize into four chars for inode.
@@ -703,15 +701,19 @@ void deleteFile(char ***parsedCommandPtr)
             char dataBitmap[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + inodeCount, dataBitmap);
-            free(dataBitmapBlock);
+            free(dataBitmapBlock)
         }
     }
     
     //Calculate how much of the file is still in indirect pointer
     int remainingFileSize = extractValue(&inode, 0) - 4;
 
+    printf("Before Pointer block\n");
+
     //Get the pointer datablock.
     char *pointerDataBlock = diskRead(pointer);
+
+    printf("After Pointer block\n");
 
     int counter = 0;
 
@@ -740,7 +742,7 @@ void deleteFile(char ***parsedCommandPtr)
     }
 
     free(pointerDataBlock);
-    // free(inode);
+    free(inode);
 
     printf("File with inode %d has been deleted.\n", inodeIndex);
 }
