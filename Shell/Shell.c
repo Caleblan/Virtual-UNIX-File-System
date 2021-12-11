@@ -334,9 +334,22 @@ void makeFile(char ***parsedCommandPtr)
     
     char **parsedCommand = *parsedCommandPtr;
 
-    if(parsedCommand[1] != NULL)
+    if(parsedCommand[1] == NULL)
     {
-        printf("Too many arguements. Command should follow form \'make_file\'.\n");
+        printf("Too few arguements. Command should follow form \'make_file [integer (Directory inode Number)]\'.\n");
+        return;
+    }
+    else if (parsedCommand[2] != NULL)
+    {
+        printf("Too few arguements. Command should follow form \'make_file [integer (Directory inode Number)]\'.\n");
+        return;
+    }
+
+    int directoryInodeIndex = atoi(parsedCommand[2]);
+
+    if(directoryInodeIndex < 0)
+    {
+        printf("Invalid inode value.\n");
         return;
     }
 
@@ -358,10 +371,64 @@ void makeFile(char ***parsedCommandPtr)
         char data[BLOCK_SIZE] = {0};
         memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
         diskWrite(1, data);
-        printf("Inode at index %d has been created.\n", inodeIndex);
+        printf("File with inode index %d has been created.\n", inodeIndex);
     }
 
     free(inodeBitampBlock);
+
+
+
+    //Add file to directory
+    char *directoryInode = diskRead(2 + directoryInode);
+
+    //Add a file to inode pointer
+    for(int i = 1; i <= 5; i++)
+    {
+        unsigned int pointer = extractValue(&directoryInode, i * 4);
+
+        //Do indirect pointer stuffz   
+        if(i == 5 && pointer == 0)
+        {
+            char *dataBitmapBlock = diskRead(dataBitmapIndex);
+
+            //TODO allow for multiple datablocksBitmaps
+            int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
+            int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
+
+            if(dataBlockIndex == -1)
+            {
+                printf("No more data blocks are available.\n");
+                free(dataBitmapBlock);
+                return;
+                //TODO check if there is another datablock group
+            }
+            //Write new dataGroupBitmap to disk.
+            char dataBitmap[BLOCK_SIZE] = {0};
+            printf("%d\n", dataBitmapBlock[dataBitmapIndex / 8]);
+            memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
+            diskWrite(2 + inodeCount, dataBitmap);
+            free(dataBitmapBlock);
+
+            compressValue(&directoryInode, dataBlockIndex, i * 4);
+        }
+        //If there are pointers 
+        else if(pointer == 0)
+        {
+            compressValue(&directoryInode, inodeIndex, i * 4);
+        }
+        //Leave loop if there is no more pointers.
+        else
+        {
+            break;
+        }
+    }
+
+    char directoryBlock[BLOCK_SIZE] = {0};
+    memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
+    diskWrite(inodeIndex, 2 + directoryInodeIndex);
+
+    free(directoryInode);
+    printf("File with inode index %d has been added to directory with inode index %d\n", inodeIndex, directoryInodeIndex);
 }
 
 /**
@@ -388,8 +455,6 @@ void writeFile(char ***parsedCommandPtr)
         return;
     }
 
-
-
     int inodeIndex = atoi(parsedCommand[1]);
 
     unsigned int inodeCount = getInodeCount();
@@ -412,35 +477,26 @@ void writeFile(char ***parsedCommandPtr)
         free(inode);
         return;
     }
-    //Deallocate all data pointers from inode and bitmaps
-    // else
-    // {
-    //     for(int i = 1; i < 5; i++)
-    //     {
-    //         //Get pointer value out of inode.
-    //         unsigned int pointer = (int) (inode[(i * 4)] << 24);
-    //         pointer += (int) (inode[(i * 4) + 1] << 16);
-    //         pointer += (int) (inode[(i * 4) + 2] << 8);
-    //         pointer += (int) inode[(i * 4) + 3];
+    //Remove stuff from bitmaps then reallocate data to it.
+    else
+    {
 
-    //         //If the pointer is allocated
-    //         if(pointer > 0)
-    //         {
-    //             char *dataBitmapBlock = diskRead(dataBitmapIndex);
-    //             dataBitmapBlock[dataBitmapIndex / 8] ^= (0b10000000 >> inodeIndex % 8);
-    //             char dataBitmap[BLOCK_SIZE] = {0};
-    //             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-    //             diskWrite(2 + inodeCount, dataBitmap);
-    //             free(dataBitmapBlock);
+        // deleteFile();
 
-    //         }
+        //Get inodeBitmapBlock and check if spot is open
+        char *inodeBitampBlock = diskRead(1);
+        int inodeIndex = bitmapSearch(&inodeBitampBlock);
 
-            //     inode[24] = 0;
-            // inode[25] = 0;
-            // inode[26] = 0;
-            // inode[27] = 0;
-    //     }
-    // }
+        unsigned int inodeCount = getInodeCount();
+
+
+        char data[BLOCK_SIZE] = {0};
+        memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
+        diskWrite(1, data);
+        printf("File with inode index %d has been created.\n", inodeIndex);
+
+        free(inodeBitampBlock);
+    }
 
     //Used only if the string is larger than the BLOCK_SIZE
     char *newString = parsedCommand[2];
@@ -691,7 +747,7 @@ void deleteFile(char ***parsedCommandPtr)
         //If address has been set, go unallocate the pointer
         if(pointer > 0)
         {
-            printf("Inode Count %d\n", 2 + getInodeCount());
+            printf("Inode Count %d\n", 2 + inodeCount);
             printf("DataBlock index %d\n", pointer - (3 + inodeCount));
 
             //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
@@ -904,7 +960,8 @@ void formatDisk()
     
     diskWrite(0, metaData);
 
-    // createDirectory();
+    //Used to create root directory.
+    createDirectory();
 
 
     //Calculate how many datablockBitmaps we need.
@@ -949,11 +1006,11 @@ void createDirectory(char ***parsedCommandPtr)
         char data[BLOCK_SIZE];
         memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
         diskWrite(1, data);
-        printf("Inode at index %d has been created.\n", inodeIndex);
     }
 
     free(inodeBitampBlock);
-    
+
+    printf("Directory with inode index %d has been created.\n", inodeIndex);
 }
 
 
