@@ -701,7 +701,7 @@ void deleteFile(char ***parsedCommandPtr)
             char dataBitmap[BLOCK_SIZE] = {0};
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + inodeCount, dataBitmap);
-            free(dataBitmapBlock)
+            free(dataBitmapBlock);
         }
     }
     
