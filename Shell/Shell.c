@@ -708,12 +708,8 @@ void deleteFile(char ***parsedCommandPtr)
     //Calculate how much of the file is still in indirect pointer
     int remainingFileSize = extractValue(&inode, 0) - 4;
 
-    printf("Before Pointer block\n");
-
     //Get the pointer datablock.
     char *pointerDataBlock = diskRead(pointer);
-
-    printf("After Pointer block\n");
 
     int counter = 0;
 
@@ -722,10 +718,14 @@ void deleteFile(char ***parsedCommandPtr)
     {
         //TODO get indirect block pointer value.
 
+        printf("Before Pointer block\n");
+
         //Get address
         pointer = extractValue(&pointerDataBlock, counter + 4);
 
+        printf("After Pointer block\n");
 
+        
 
         //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
         char *dataBitmapBlock = diskRead(2 + inodeCount);
