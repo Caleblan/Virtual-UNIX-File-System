@@ -447,7 +447,7 @@ void makeFile(char ***parsedCommandPtr)
 
     char directoryBlock[BLOCK_SIZE] = {0};
     memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
-    diskWrite(2 + directoryInodeIndex, directoryBlock);
+    diskWrite(3 + directoryInodeIndex, directoryBlock);
 
     free(directoryInode);
     printf("File with inode index %d has been added to directory with inode index %d\n", inodeIndex, directoryInodeIndex);
