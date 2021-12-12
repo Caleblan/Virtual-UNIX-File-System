@@ -436,13 +436,13 @@ void makeFile(char ***parsedCommandPtr)
             //Search for empty spot 
             for(int j = 0; j < BLOCK_SIZE / 4; j++)
             {
-                unsigned int pointer = extractValue(&directoryInode, j * 4);
+                unsigned int pointer = extractValue(&dataPointerBlock, j * 4);
 
-                printf("Outside if %d, Pointer: %d\n", j, pointer);
+                // printf("Outside if %d, Pointer: %d\n", j, pointer);
 
                 if(pointer == 0)
                 {
-                    printf("Inside if %d\n", j);
+                    // printf("Inside if %d\n", j);
 
                     compressValue(&dataPointerBlock,  3 + inodeIndex, j * 4);
                     char data[BLOCK_SIZE] = {0};
