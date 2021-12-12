@@ -434,12 +434,14 @@ void makeFile(char ***parsedCommandPtr)
             char *dataPointerBlock = diskRead(dataBlockIndex);
 
             //Search for empty spot 
-            for(int j = 0; i < BLOCK_SIZE / 4; j++)
+            for(int j = 0; j < BLOCK_SIZE / 4; j++)
             {
                 unsigned int pointer = extractValue(&directoryInode, j * 4);
 
                 if(pointer == 0)
                 {
+                    // printf("%d", j);
+
                     compressValue(&dataPointerBlock,  3 + inodeIndex, j * 4);
                     char data[BLOCK_SIZE] = {0};
                     memcpy(&data, dataPointerBlock, BLOCK_SIZE);
