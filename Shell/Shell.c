@@ -661,7 +661,7 @@ void writeFile(char ***parsedCommandPtr)
     //If there is still more characters in the string, allocate a datablock of addresses and fill them.
     if (strlen(newString) > 0)
     {
-        printf("Allocated extra block pointer.\n");
+        // printf("Allocated extra block pointer.\n");
 
         char *dataBitmapBlock = diskRead(dataBitmapIndex);
         int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
