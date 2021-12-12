@@ -27,19 +27,17 @@ the shell is waiting to recieve input. The commands of the shell are listed belo
 
     -Creates a file and prints inode index that it took so it can be used for other commands.
     
-    -Makes
+    -Takes and inode value corresponding to a directory.
 
 6) write_file [Inode index (integer)] [String]
 
-    -
+    - Takes an inode index as well as a string.
     
-    - String can be any size and creates blocks corresponding
+    - String can be any size and creates (string / BLOCK_SIZE) number of pointers (until indirect pointer is full).
 
 7) delete_file [Inode index (integer)]
 
-    - Delallocates all pointer blocks.
-   
-   -
+    - Delallocates all pointer blocks for a the specified inode value.
 
 8) exit
 
@@ -50,7 +48,7 @@ this will tell the shell to take the whole string as a single arguement. Check t
 section below just for a note on the shell.
 
 Note: Since calloc is used for disk, the whole disk is initializd to zero. This means essentialy
-that I only need to adjust values in superblock for formatting the disk. 
+that I only need to adjust values in superblock and root directory for formatting the disk. 
 
 
 __________________________________________________________________________________________________
@@ -99,6 +97,7 @@ Known Bugs:
 When entering strings with no spaces into a command such as the 'disk_write "Hello"',
 the shell will return an message saying there needs to be a closing ". When inputting strings
 with no spaces, remove "" marks surrounding the string.
+
 __________________________________________________________________________________________________
 
 This is the example for part 3
