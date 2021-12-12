@@ -1,7 +1,7 @@
 When first openening the shell, you are greated by '>>" characters. When this happens,
 the shell is waiting to recieve input. The commands of the shell are listed below with general arguements:
 
-1) disk_write [Disk location (integer)] [String < 128 characters]
+1) disk_write [Disk location (integer)] [String <= 128 characters]
 
 2) disk_read [Disk location (integer)]
 
