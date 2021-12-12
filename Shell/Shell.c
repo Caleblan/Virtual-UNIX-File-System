@@ -572,7 +572,7 @@ void writeFile(char ***parsedCommandPtr)
         char**splitString;
 
         char buffer[40];
-        sscanf(buffer, "delete_file %d", inodeIndex);
+        sscanf(buffer, "delete_file %d", &inodeIndex);
 
         splitString[0] = strtok(buffer, " ");
         splitString[1] = strtok(NULL, " ");
