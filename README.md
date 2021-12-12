@@ -26,7 +26,7 @@ section below just for a note on the shell.
 Note: Since calloc is used for disk, the whole disk is initializd to zero. This means essentialy
 to I only need to adjust values in superblock for formatting the disk. 
 
-
+__________________________________________________________________________________________________
 How to go about doing the commands:
 1) Create a partition using create partition command.
     This will create a emulated disk of specified bytesize which will be divided into blocks
@@ -44,20 +44,19 @@ How to go about doing the commands:
     
 3) When you want to quit, type 'exit' into the shell.
 
-
+__________________________________________________________________________________________________
 Assumptions:
  - String names for files and directories are nice, but not necessary for the assignment
    as functionallity can still be checked with inode indecies.
 
 
-
+__________________________________________________________________________________________________
 Known Bugs:
 When entering strings with no spaces into a command such as the 'disk_write "Hello"',
 the shell will return an message saying there needs to be a closing ". When inputting strings
 with no spaces, remove "" marks surrounding the string.
 
 
-
-
+__________________________________________________________________________________________________
 How to compile:
 gcc -o Shell Shell.c Shell.h Disk.h Disk.c
