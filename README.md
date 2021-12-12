@@ -2,13 +2,21 @@ When first openening the shell, you are greated by '>>" characters. When this ha
 the shell is waiting to recieve input. The commands of the shell are listed below with general arguements:
 
 1) disk_write [Disk location (integer)] [String < 128 characters]
+
 2) disk_read [Disk location (integer)]
+
 3) create_partition [Number of bytes (integer)]
+
 4) create_directory [Directory index (integer)]
+
 5) make_file [Directory index (integer)]
+
 6) write_file [Inode index (integer)] [String]
+
 7) delete_file [Inode index (integer)]
+
 8) exit
+
 9) Many of the other commands in linux, as there is a general execute function as well.
 
 Note: When entering strings into shell, surroud the whole string with " on both sides as
