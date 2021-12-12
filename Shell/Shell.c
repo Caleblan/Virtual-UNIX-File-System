@@ -12,6 +12,8 @@ bool errorFound = false;
 //Used to continuously prompt user until stated otherwise.
 bool active = true;
 
+unsigned int dataBlockCount = 0;
+
 /**
  * Reads input from stdin one character at a time and dynamically
  * allocates enough memory to store command. 
@@ -121,10 +123,6 @@ void parseCommand(char ***parsedCommandPtr)
     {
         diskWriteCommand(parsedCommandPtr);
     }
-    // else if (strcmp(parsedCommand[0], "format_disk") == 0)
-    // {
-    //     formatDisk();
-    // }
     else if (strcmp(parsedCommand[0], "disk_read") == 0)
     {
         diskReadCommand(parsedCommandPtr);
@@ -313,10 +311,16 @@ void createDisk(char ***parsedCommandPtr)
 
     diskBlocks = diskSize / BLOCK_SIZE;
 
-    if(diskBlocks < 4)
+    //Need to have atleast one inode for root directory.
+    if(diskBlocks < 10)
     {
-        printf("The disk require at least %d bytes to create 4 blocks (1 SuperBlock, 1 Inode Bitmap, 1 inode (For root directory), and 1 DataBitmapGroup) .\n"
+        printf("The disk require at least %d bytes to create 4 blocks (1 SuperBlock, 1 Inode Bitmap, 1 inode (For root directory), 1 DataBitmapGroup, and 5 data blocks) .\n"
         , BLOCK_SIZE * 4);
+        return;
+    }
+    else if(diskSize < 0)
+    {
+        printf("Invalid disk size");
         return;
     }
 
@@ -550,6 +554,7 @@ void writeFile(char ***parsedCommandPtr)
         return;
     }
 
+
     //Gets the block index of first dataBlocKBitmap
     int dataBitmapIndex = (2 + inodeCount);
     char *inode = diskRead(2 + inodeIndex);
@@ -564,8 +569,15 @@ void writeFile(char ***parsedCommandPtr)
     //Remove stuff from bitmaps then reallocate data to it.
     else
     {
+        char**splitString;
 
-        // deleteFile();
+        char buffer[40];
+        sscanf(buffer, "delete_file %d", inodeIndex);
+
+        splitString[0] = strtok(buffer, " ");
+        splitString[1] = strtok(NULL, " ");
+
+        deleteFile(&splitString);
 
         //Get inodeBitmapBlock and check if spot is open
         char *inodeBitampBlock = diskRead(1);
@@ -1027,6 +1039,8 @@ void formatDisk()
 
     //Calculate how many datablockBitmaps we need.
     int datablockBitampCount = diskBlocks - (2 + inodeCount) / (BLOCK_SIZE * 8);
+
+    dataBlockCount = diskBlocks - 3 + inodeCount;
 
     //Since we use calloc, everything is initilized to zero so we don't need to worry about setting those values initially.
 
