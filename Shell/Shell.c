@@ -428,11 +428,39 @@ void makeFile(char ***parsedCommandPtr)
             free(dataBitmapBlock);
 
             compressValue(&directoryInode, dataBlockIndex, i * 4);
+
+            bool freePosition = false;
+
+            char *dataPointerBlock = diskRead(dataBlockIndex);
+
+            //Search for empty spot 
+            for(int j = 0; i < BLOCK_SIZE / 4; j++)
+            {
+                unsigned int pointer = extractValue(&directoryInode, j * 4);
+
+                if(pointer == 0)
+                {
+                    compressValue(&dataPointerBlock,  2 + inodeIndex, j * 4);
+                    char data[BLOCK_SIZE] = {0};
+                    memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
+                    freePosition = true;
+                    diskWrite(dataBlockIndex, data);
+                    break;
+                }
+            }
+
+            free(dataPointerBlock);
+
+            if(!freePosition)
+            {
+                printf("Directory with inode index %d is already full.\n", directoryInodeIndex);
+                return;
+            }
         }
         //If there are pointers
         else if (pointer == 0)
         {
-            compressValue(&directoryInode, 3 + inodeIndex, i * 4);
+            compressValue(&directoryInode, 2 + inodeIndex, i * 4);
             break;
         }
     }
