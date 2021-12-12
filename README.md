@@ -24,7 +24,7 @@ this will tell the shell to take the whole string as a single arguement. Check t
 section below just for a note on the shell.
 
 Note: Since calloc is used for disk, the whole disk is initializd to zero. This means essentialy
-to I only need to adjust values in superblock for formatting the disk. 
+that I only need to adjust values in superblock for formatting the disk. 
 
 __________________________________________________________________________________________________
 How to go about doing the commands:
