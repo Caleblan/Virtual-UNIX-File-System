@@ -676,6 +676,7 @@ void writeFile(char ***parsedCommandPtr)
         if (dataBitmapIndex == -1)
         {
             printf("No more data blocks are available.\n");
+            free(dataBitmapBlock);
             return;
         }
 
@@ -757,6 +758,8 @@ void writeFile(char ***parsedCommandPtr)
         char indirectPtr[BLOCK_SIZE] = {0};
         memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
         diskWrite(indirectDataBlockIndex, indirectPtr);
+
+        free(indirectPointer);
     }
 
     //Split fileSize into four chars for inode.
@@ -767,7 +770,6 @@ void writeFile(char ***parsedCommandPtr)
     memcpy(&inodeArr, inode, BLOCK_SIZE);
     diskWrite(2 + inodeIndex, inodeArr);
     free(inode);
-    free(indirectPointer);
 
     printf("New file has been created with size %d blocks.\n", fileBlockCount);
 }
