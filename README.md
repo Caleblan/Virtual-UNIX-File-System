@@ -28,6 +28,7 @@ to I only need to adjust values in superblock for formatting the disk.
 
 __________________________________________________________________________________________________
 How to go about doing the commands:
+
 1) Create a partition using create partition command.
     This will create a emulated disk of specified bytesize which will be divided into blocks
     which may result in a bit of unused space at the end of a disk if it is not "clean" division.
@@ -37,11 +38,13 @@ How to go about doing the commands:
     Note: If the disk is not initially created, then other file system / disk commands will return an
     error message requiring the user to use create_partition command before doing anything.
 
+
 2) Do whatever you want to do for testing.
     Note: When creating files or directories, an inode value will be returned to the user saying which
     inode index has been selected as to represent the file. This inode value will then be used for other
     commands when wanting to do something with the file.
     
+
 3) When you want to quit, type 'exit' into the shell.
 
 __________________________________________________________________________________________________
