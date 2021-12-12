@@ -245,7 +245,7 @@ void diskWriteCommand(char ***parsedCommandPtr)
     }
 
     //TODO check for greater than input.
-    //sscanf(parsedCommand[1], "%u", &blockAddress);
+    sscanf(parsedCommand[1], "%u", &blockAddress);
 
     char data[BLOCK_SIZE] = {0};
     memcpy(&data, parsedCommand[2], strlen(parsedCommand[2]));
@@ -571,10 +571,11 @@ void writeFile(char ***parsedCommandPtr)
         char**splitString;
 
         char buffer[40];
-        sprintf(buffer, "delete_file %d", inodeIndex);
+        sprintff(buffer, "delete_file %d", inodeIndex);
 
         splitString[0] = strtok(buffer, " ");
         splitString[1] = strtok(NULL, " ");
+        splitString[2] = NULL;
 
         printf("%s %s", splitString[0], splitString[1]);
 
