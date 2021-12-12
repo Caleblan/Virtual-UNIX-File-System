@@ -576,6 +576,8 @@ void writeFile(char ***parsedCommandPtr)
         splitString[0] = strtok(buffer, " ");
         splitString[1] = strtok(NULL, "\0");
 
+        printf("%s %d", splitString[0], splitString[1]);
+
         deleteFile(&splitString);
 
         //Get inodeBitmapBlock and check if spot is open
