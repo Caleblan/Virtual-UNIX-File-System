@@ -61,6 +61,8 @@ Assumptions:
    but it did not seem necessary as it fills up console with lots of different writes that such as bitmap writes, etc.
  - I did not implement a recursive delete for directories as that was not specified in the project description.
    Note that will still delete the a directory, but the files could not be in a directory technically.
+ - I assumed that once a file is written to it is never written to again since functionallity can be achieved by
+    deleting a file the makeing and writing to a new one.
 
 
 __________________________________________________________________________________________________
