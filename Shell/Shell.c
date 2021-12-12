@@ -121,10 +121,10 @@ void parseCommand(char ***parsedCommandPtr)
     {
         diskWriteCommand(parsedCommandPtr);
     }
-    else if (strcmp(parsedCommand[0], "format_disk") == 0)
-    {
-        formatDisk();
-    }
+    // else if (strcmp(parsedCommand[0], "format_disk") == 0)
+    // {
+    //     formatDisk();
+    // }
     else if (strcmp(parsedCommand[0], "disk_read") == 0)
     {
         diskReadCommand(parsedCommandPtr);
@@ -313,8 +313,17 @@ void createDisk(char ***parsedCommandPtr)
 
     diskBlocks = diskSize / BLOCK_SIZE;
 
+    if(diskBlocks < 4)
+    {
+        printf("The disk require at least %d bytes to create 4 blocks (1 SuperBlock, 1 Inode Bitmap, 1 inode (For root directory), and 1 DataBitmapGroup) .\n"
+        , BLOCK_SIZE * 4);
+        return;
+    }
+
     //Used to store an array of structs.
     disk2 = calloc(diskSize, sizeof(char));
+
+    formatDisk();
 
     printf("Disk partition of size %d bytes has been created (BlockSize: %d, BlockCount: %d).\n", diskSize, BLOCK_SIZE, diskBlocks);
 }
@@ -349,7 +358,7 @@ void makeFile(char ***parsedCommandPtr)
     char *inodeBitampBlock = diskRead(1);
     
 
-
+    //Invalid negative index.
     if (directoryInodeIndex < 0)
     {
         printf("Invalid inode value.\n");
@@ -363,6 +372,8 @@ void makeFile(char ***parsedCommandPtr)
         free(inodeBitampBlock);
         return;
     }
+
+    //New inode index is set in directory below at the for-loop.
 
     int inodeIndex = bitmapSearch(&inodeBitampBlock);
 
@@ -387,7 +398,7 @@ void makeFile(char ***parsedCommandPtr)
     //Add file to directory
     char *directoryInode = diskRead(2 + directoryInodeIndex);
 
-    //Add a file to inode pointer
+    //Add a file to inode pointer for directory at earliest location.
     for (int i = 1; i <= 5; i++)
     {
         unsigned int pointer = extractValue(&directoryInode, i * 4);
@@ -426,7 +437,10 @@ void makeFile(char ***parsedCommandPtr)
         {
             break;
         }
+
     }
+
+    unsigned int directorySize = extractValue();
 
     char directoryBlock[BLOCK_SIZE] = {0};
     memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
@@ -1007,7 +1021,7 @@ void createDirectory(char ***parsedCommandPtr)
             //If directory inode is not allocated
             else if((inodeBitampBlock[directoryInodeIndex / 8] & (0b10000000 >> (directoryInodeIndex % 8))) == 0)
             {
-                printf("Cannot use inode %d since it is already allocated to a directory.\n", directoryInodeIndex);
+                printf("Cannot use inode %d since it is already allocated to a file.\n", directoryInodeIndex);
                 free(inodeBitampBlock);
                 return;
             }
