@@ -51,15 +51,16 @@ ________________________________________________________________________________
 Assumptions:
  - String names for files and directories are nice, but not necessary for the assignment
    as functionallity can still be checked with inode indecies.
-
-
+ - I did not implement a readFile method as it was not specified to do so in the project description.
+   There are some commmented out prints in Disk.c in writeDisk that can be uncommented to see all the writes,
+   but it did not seem necessary as it fills up console with lots 
+ - I did not implement a recursive delete for directories as that was not specified in the project description.
+   Note that will still delete the a directory, but the files could not be in a directory technically.
 __________________________________________________________________________________________________
 Known Bugs:
 When entering strings with no spaces into a command such as the 'disk_write "Hello"',
 the shell will return an message saying there needs to be a closing ". When inputting strings
 with no spaces, remove "" marks surrounding the string.
-
-
 __________________________________________________________________________________________________
 How to compile:
 gcc -o Shell Shell.c Shell.h Disk.h Disk.c
