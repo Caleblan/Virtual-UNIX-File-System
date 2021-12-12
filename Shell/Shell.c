@@ -383,6 +383,8 @@ void makeFile(char ***parsedCommandPtr)
     if (inodeIndex == -1 || inodeIndex >= inodeCount)
     {
         printf("No more inodes available. A file must be deleted before another is added.\n");
+        free(inodeBitampBlock);
+        return;
     }
     //Unallocated inode index is found.
     else
@@ -396,7 +398,7 @@ void makeFile(char ***parsedCommandPtr)
     free(inodeBitampBlock);
 
     //Add file to directory
-    char *directoryInode = diskRead(2 + directoryInodeIndex);
+    char *directoryInode = diskRead(3 + directoryInodeIndex);
 
     //Add a file to inode pointer for directory at earliest location.
     for (int i = 1; i <= 5; i++)
@@ -406,7 +408,7 @@ void makeFile(char ***parsedCommandPtr)
         //Do indirect pointer stuffz
         if (i == 5 && pointer == 0)
         {
-            char *dataBitmapBlock = diskRead(2 + getInodeCount());
+            char *dataBitmapBlock = diskRead(2 + inodeCount);
             //TODO allow for multiple datablocksBitmaps
             int dataBitmapIndex = bitmapSearch(&dataBitmapBlock);
             int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
