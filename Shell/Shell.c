@@ -716,7 +716,7 @@ void writeFile(char ***parsedCommandPtr)
                 return;
             }
 
-            printf("Before data disk write\n");
+            //printf("Before data disk write\n");
             //Put part of string into data block
             unsigned int dataBlockIndex = (3 + inodeCount) + dataBitmapIndex;
 
@@ -736,7 +736,7 @@ void writeFile(char ***parsedCommandPtr)
                 newString += stringLenth;
             }
 
-            printf("Middle data disk write\n");
+            //printf("Middle data disk write\n");
             diskWrite(dataBlockIndex, dataBlock);
 
             //Split inode count into four chars and put address into indirect block.
@@ -751,13 +751,12 @@ void writeFile(char ***parsedCommandPtr)
             printf("File exceeds maximum block size so file has been clipped.\n");
         }
 
-        printf("IndirectBlock disk write\n");
+        //printf("IndirectBlock disk write\n");
 
         //Write indirect pointer block onto disk.
         char indirectPtr[BLOCK_SIZE] = {0};
         memcpy(&indirectPtr, indirectPointer, BLOCK_SIZE);
         diskWrite(indirectDataBlockIndex, indirectPtr);
-        free(indirectPointer);
     }
 
     //Split fileSize into four chars for inode.
@@ -768,6 +767,7 @@ void writeFile(char ***parsedCommandPtr)
     memcpy(&inodeArr, inode, BLOCK_SIZE);
     diskWrite(2 + inodeIndex, inodeArr);
     free(inode);
+    free(indirectPointer);
 
     printf("New file has been created with size %d blocks.\n", fileBlockCount);
 }
