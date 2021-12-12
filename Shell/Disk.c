@@ -35,10 +35,12 @@ void diskWrite(unsigned int diskLocation, char data[BLOCK_SIZE])
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         disk2[i] = data[counter++];
-        printf("Index: %d , [%c, %d]\n", i, disk2[i], disk2[i]);
+        //printf("Index: %d , [%c, %d]\n", i, disk2[i], disk2[i]);
     }
 
-    printf("\n");    
+    //printf("\n");
+
+    return;
 
 }
 
@@ -61,10 +63,10 @@ char *diskRead(unsigned int diskLocation)
     for(int i = diskLocation * BLOCK_SIZE; i < BLOCK_END; i++)
     {
         readData[counter++] = disk2[i];
-        printf("READ [%d]: %d\n", i ,readData[counter-1]);
+        //printf("READ [%d]: %d\n", i ,readData[counter-1]);
     }
 
-    printf("\n");  
+    //printf("\n");  
     
     return readData;
 }
