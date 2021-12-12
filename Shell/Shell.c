@@ -277,9 +277,8 @@ void diskReadCommand(char ***parsedCommandPtr)
     if (block != NULL)
     {
         printf("'%s' read from disk (Block Location: %d).\n", block, blockAddress);
+        free(block);
     }
-
-    //free(block);
 }
 
 /**
@@ -575,7 +574,7 @@ void writeFile(char ***parsedCommandPtr)
         sscanf(buffer, "delete_file %d", &inodeIndex);
 
         splitString[0] = strtok(buffer, " ");
-        splitString[1] = strtok(NULL, " ");
+        splitString[1] = strtok(NULL, "\0");
 
         deleteFile(&splitString);
 
