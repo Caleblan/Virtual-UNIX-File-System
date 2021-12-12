@@ -440,7 +440,7 @@ void makeFile(char ***parsedCommandPtr)
 
                 if(pointer == 0)
                 {
-                    compressValue(&dataPointerBlock,  2 + inodeIndex, j * 4);
+                    compressValue(&dataPointerBlock,  3 + inodeIndex, j * 4);
                     char data[BLOCK_SIZE] = {0};
                     memcpy(&data, dataPointerBlock, BLOCK_SIZE);
                     freePosition = true;
@@ -460,13 +460,14 @@ void makeFile(char ***parsedCommandPtr)
         //If there are pointers
         else if (pointer == 0)
         {
-            compressValue(&directoryInode, 2 + inodeIndex, i * 4);
+            compressValue(&directoryInode, 3 + inodeIndex, i * 4);
             break;
         }
     }
 
+    //Update file size count for directory pointer.
     unsigned int directorySize = extractValue(&directoryInode, 0);
-    compressValue(&directoryInode, directorySize, 0);
+    compressValue(&directoryInode, directorySize+1, 0);
 
     char directoryBlock[BLOCK_SIZE] = {0};
     memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
