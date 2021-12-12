@@ -470,11 +470,11 @@ void makeFile(char ***parsedCommandPtr)
             //Search for empty spot 
             for(int j = 0; j < BLOCK_SIZE / 4; j++)
             {
-                unsigned int pointer = extractValue(&dataPointerBlock, j * 4);
+                unsigned int pointer2 = extractValue(&dataPointerBlock, j * 4);
 
                 printf("Outside if %d, Pointer: %d\n", j, pointer);
 
-                if(pointer == 0)
+                if(pointer2 == 0)
                 {
                     printf("Inside if %d\n", j);
 
