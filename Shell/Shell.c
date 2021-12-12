@@ -1050,6 +1050,8 @@ void createDirectory(char ***parsedCommandPtr)
         return;
     }
 
+    int directoryInodeIndex;
+
     //If command comes from user
     if (parsedCommandPtr != NULL)
     {
@@ -1068,7 +1070,7 @@ void createDirectory(char ***parsedCommandPtr)
         //
         else
         {
-            int directoryInodeIndex = atoi(parsedCommand[1]);
+            directoryInodeIndex = atoi(parsedCommand[1]);
 
             //Get inodeBitmapBlock and check if spot is open
             char *inodeBitampBlock = diskRead(1);
@@ -1112,7 +1114,7 @@ void createDirectory(char ***parsedCommandPtr)
 
     free(inodeBitampBlock);
 
-    printf("Directory with inode index %d has been created.\n", inodeIndex);
+    printf("Directory with inode index %d has been created in directory %d.\n", inodeIndex, directoryInodeIndex);
 }
 
 int main(void)
