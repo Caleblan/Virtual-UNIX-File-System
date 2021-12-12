@@ -250,7 +250,7 @@ void diskWriteCommand(char ***parsedCommandPtr)
     sscanf(parsedCommand[1], "%u", &blockAddress);
 
     char data[BLOCK_SIZE] = {0};
-    memcpy(&data, parsedCommand[2], BLOCK_SIZE);
+    memcpy(&data, parsedCommand[2], strlen(parsedCommand[2]));
 
     diskWrite(blockAddress, data);
 
@@ -470,11 +470,11 @@ void makeFile(char ***parsedCommandPtr)
             //Search for empty spot 
             for(int j = 0; j < BLOCK_SIZE / 4; j++)
             {
-                unsigned int pointer2 = extractValue(&dataPointerBlock, j * 4);
+                unsigned int pointer = extractValue(&dataPointerBlock, j * 4);
 
                 printf("Outside if %d, Pointer: %d\n", j, pointer);
 
-                if(pointer2 == 0)
+                if(pointer == 0)
                 {
                     printf("Inside if %d\n", j);
 
@@ -482,7 +482,7 @@ void makeFile(char ***parsedCommandPtr)
                     char data[BLOCK_SIZE] = {0};
                     memcpy(&data, dataPointerBlock, BLOCK_SIZE);
                     freePosition = true;
-                    diskWrite(pointer, data);
+                    diskWrite(p, data);
                     break;
                 }
             }
@@ -820,14 +820,10 @@ void deleteFile(char ***parsedCommandPtr)
     {
         //Get pointer from four bytes.
         pointer = extractValue(&inode, i * 4);
-        printf("Pointer value: %d\n", pointer);
 
         //If address has been set, go unallocate the pointer
         if (pointer > 0)
         {
-            printf("Inode Count %d\n", 2 + inodeCount);
-            printf("DataBlock index %d\n", pointer - (3 + inodeCount));
-
             //Unallocate datablock corresponding to inode data block pointer in dataBlockBitmap.
             char *dataBitmapBlock = diskRead(2 + inodeCount);
             unsigned int dataBlockIndex = pointer - (3 + inodeCount);
@@ -920,18 +916,6 @@ void compressValue(char **dataPtr, unsigned int value, unsigned int index)
 }
 
 /**
- * Copies elements from char* to char array
- * Note: This is done because there can be 0 values which are valid byte values, but pointers
- *       think they are terminating symbols.
- */
-// void formatForDisk(char** dataPtr, unsigned int writeIndex)
-// {
-//     char dataBitmap[BLOCK_SIZE] = {0};
-//     memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
-//     diskWrite(2 + inodeCount, dataBitmap);
-// }
-
-/**
  * Returns a value determining if 
  */
 bool existingInode(unsigned int inodeIndex)
@@ -949,6 +933,9 @@ bool existingInode(unsigned int inodeIndex)
     return true;
 }
 
+/**
+ * 
+ */
 int bitmapSearch(char **bitmapBlock)
 {
     char *inodeBitmapBlock = *bitmapBlock;
