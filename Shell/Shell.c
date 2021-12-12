@@ -440,8 +440,8 @@ void makeFile(char ***parsedCommandPtr)
 
     }
 
-    unsigned int directorySize = extractValue(0);
-    compressValue(&directoryInode, directorySize, 0)
+    unsigned int directorySize = extractValue(&directoryInode, 0);
+    compressValue(&directoryInode, directorySize, 0);
 
     char directoryBlock[BLOCK_SIZE] = {0};
     memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
