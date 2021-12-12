@@ -425,7 +425,6 @@ void makeFile(char ***parsedCommandPtr)
             }
             //Write new dataGroupBitmap to disk.
             char dataBitmap[BLOCK_SIZE] = {0};
-            printf("%d\n", dataBitmapBlock[dataBitmapIndex / 8]);
             memcpy(&dataBitmap, dataBitmapBlock, BLOCK_SIZE);
             diskWrite(2 + inodeCount, dataBitmap);
             free(dataBitmapBlock);
@@ -764,8 +763,6 @@ void writeFile(char ***parsedCommandPtr)
 
     //Split fileSize into four chars for inode.
     compressValue(&inode, fileBlockCount, 0);
-
-    printf("Inode disk write\n");
 
     //Write inode to disk.
     char inodeArr[BLOCK_SIZE] = {0};
