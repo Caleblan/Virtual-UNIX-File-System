@@ -57,8 +57,8 @@ Assumptions:
  - String names for files and directories are nice, but not necessary for the assignment
    as functionallity can still be checked with inode indecies.
  - I did not implement a readFile method as it was not specified to do so in the project description.
-   There are some commmented out prints in Disk.c in writeDisk that can be uncommented to see all the writes,
-   but it did not seem necessary as it fills up console with lots 
+   There are some commmented out prints in Disk.c (Line 38) in writeDisk that can be uncommented to see all the writes,
+   but it did not seem necessary as it fills up console with lots of different writes that such as bitmap writes, etc.
  - I did not implement a recursive delete for directories as that was not specified in the project description.
    Note that will still delete the a directory, but the files could not be in a directory technically.
 
