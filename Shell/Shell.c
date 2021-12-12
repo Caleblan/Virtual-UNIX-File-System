@@ -461,6 +461,40 @@ void makeFile(char ***parsedCommandPtr)
                 return;
             }
         }
+        else if (i == 5 && pointer != 0)
+        {
+            bool freePosition = false;
+
+            char *dataPointerBlock = diskRead(pointer);
+
+            //Search for empty spot 
+            for(int j = 0; j < BLOCK_SIZE / 4; j++)
+            {
+                unsigned int pointer = extractValue(&dataPointerBlock, j * 4);
+
+                printf("Outside if %d, Pointer: %d\n", j, pointer);
+
+                if(pointer == 0)
+                {
+                    printf("Inside if %d\n", j);
+
+                    compressValue(&dataPointerBlock,  3 + inodeIndex, j * 4);
+                    char data[BLOCK_SIZE] = {0};
+                    memcpy(&data, dataPointerBlock, BLOCK_SIZE);
+                    freePosition = true;
+                    diskWrite(dataBlockIndex, data);
+                    break;
+                }
+            }
+
+            free(dataPointerBlock);
+
+            if(!freePosition)
+            {
+                printf("Directory with inode index %d is already full.\n", directoryInodeIndex);
+                return;
+            }
+        }
         //If there are pointers
         else if (pointer == 0)
         {
