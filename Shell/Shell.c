@@ -566,34 +566,34 @@ void writeFile(char ***parsedCommandPtr)
         return;
     }
     //Remove stuff from bitmaps then reallocate data to it.
-    else
-    {
-        char**splitString;
+    // else
+    // {
+    //     char**splitString;
 
-        char buffer[40];
-        sprintf(buffer, "delete_file %d", inodeIndex);
+    //     char buffer[40];
+    //     sprintf(buffer, "delete_file %d", inodeIndex);
 
-        splitString[0] = strtok(buffer, " ");
-        splitString[1] = strtok(NULL, " ");
-        splitString[2] = NULL;
+    //     splitString[0] = strtok(buffer, " ");
+    //     splitString[1] = strtok(NULL, " ");
+    //     splitString[2] = NULL;
 
-        printf("%s %s", splitString[0], splitString[1]);
+    //     printf("%s %s", splitString[0], splitString[1]);
 
-        deleteFile(&splitString);
+    //     deleteFile(&splitString);
 
-        //Get inodeBitmapBlock and check if spot is open
-        char *inodeBitampBlock = diskRead(1);
-        int inodeIndex = bitmapSearch(&inodeBitampBlock);
+    //     //Get inodeBitmapBlock and check if spot is open
+    //     char *inodeBitampBlock = diskRead(1);
+    //     int inodeIndex = bitmapSearch(&inodeBitampBlock);
 
-        unsigned int inodeCount = getInodeCount();
+    //     unsigned int inodeCount = getInodeCount();
 
-        char data[BLOCK_SIZE] = {0};
-        memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
-        diskWrite(1, data);
-        printf("File with inode index %d has been created.\n", inodeIndex);
+    //     char data[BLOCK_SIZE] = {0};
+    //     memcpy(&data, inodeBitampBlock, BLOCK_SIZE);
+    //     diskWrite(1, data);
+    //     printf("File with inode index %d has been created.\n", inodeIndex);
 
-        free(inodeBitampBlock);
-    }
+    //     free(inodeBitampBlock);
+    // }
 
     //Used only if the string is larger than the BLOCK_SIZE
     char *newString = parsedCommand[2];
