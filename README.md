@@ -69,10 +69,13 @@ ________________________________________________________________________________
 
 
 Known Bugs:
+
 When entering strings with no spaces into a command such as the 'disk_write "Hello"',
 the shell will return an message saying there needs to be a closing ". When inputting strings
 with no spaces, remove "" marks surrounding the string.
 __________________________________________________________________________________________________
+
+This is the example for part 3
 
 
 ![Problem 2 image](Images/CPSC321Project.jpg)
