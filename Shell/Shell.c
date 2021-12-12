@@ -433,13 +433,8 @@ void makeFile(char ***parsedCommandPtr)
         else if (pointer == 0)
         {
             compressValue(&directoryInode, inodeIndex, i * 4);
-        }
-        //Leave loop if there is no more pointers.
-        else
-        {
             break;
         }
-
     }
 
     unsigned int directorySize = extractValue(&directoryInode, 0);
