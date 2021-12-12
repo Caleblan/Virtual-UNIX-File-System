@@ -438,9 +438,11 @@ void makeFile(char ***parsedCommandPtr)
             {
                 unsigned int pointer = extractValue(&directoryInode, j * 4);
 
+                printf("Outside if %d, Pointer: %d\n", j, pointer);
+
                 if(pointer == 0)
                 {
-                    // printf("%d", j);
+                    printf("Inside if %d\n", j);
 
                     compressValue(&dataPointerBlock,  3 + inodeIndex, j * 4);
                     char data[BLOCK_SIZE] = {0};
