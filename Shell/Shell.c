@@ -368,7 +368,7 @@ void makeFile(char ***parsedCommandPtr)
     //If directory inode is not allocated
     else if((inodeBitampBlock[directoryInodeIndex / 8] & (0b10000000 >> (directoryInodeIndex % 8))) == 0)
     {
-        printf("Cannot use inode %d since it is already allocated to a directory.\n", directoryInodeIndex);
+        printf("Cannot use inode %d as it's not currently allocated.\n", directoryInodeIndex);
         free(inodeBitampBlock);
         return;
     }
@@ -1022,7 +1022,7 @@ void createDirectory(char ***parsedCommandPtr)
             //If directory inode is not allocated
             else if((inodeBitampBlock[directoryInodeIndex / 8] & (0b10000000 >> (directoryInodeIndex % 8))) == 0)
             {
-                printf("Cannot use inode %d since it is already allocated to a file.\n", directoryInodeIndex);
+                printf("Cannot use inode %d as it's not currently allocated.\n", directoryInodeIndex);
                 free(inodeBitampBlock);
                 return;
             }
