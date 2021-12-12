@@ -3,31 +3,42 @@ the shell is waiting to recieve input. The commands of the shell are listed belo
 
 1) disk_write [Disk location (integer)] [String <= 128 characters]
     - Write a block to disk.
+    
     - Disk location is in blocks rather than bytes (InodeBitmapBlock would be at disk location 1 rather than 128 (if thinking in bytes))
+    
     - Method can accept more than strings larger than 128 characters, but will give error message to user
     saying thats not intended use of the method.
 
 2) disk_read [Disk location (integer)]
     - Read a block from disk.
+    
     - Disk location is in blocks rather than bytes (InodeBitmapBlock would be at disk location 1 rather than 128 (if thinking in bytes))
 
 3) create_partition [Number of bytes (integer)]
+
     - Create a virtual disk with the size of bytes for the arguement.
 
 4) create_directory [Directory index (integer)]
+
     - Takes an inode index of a directory and creates a directory in it.
 
 5) make_file [Directory index (integer)]
+
     -Creates a file and prints inode index that it took so it can be used for other commands.
+    
     -Makes
 
 6) write_file [Inode index (integer)] [String]
+
     -
+    
     - String can be any size and creates blocks corresponding
 
 7) delete_file [Inode index (integer)]
+
     - Delallocates all pointer blocks.
-    -
+   
+   -
 
 8) exit
 
