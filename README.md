@@ -75,7 +75,7 @@ with no spaces, remove "" marks surrounding the string.
 __________________________________________________________________________________________________
 
 
-![Problem 2 image](Image/CPSC321Project.jpg)
+![Problem 2 image](Images/CPSC321Project.jpg)
 
 
 
