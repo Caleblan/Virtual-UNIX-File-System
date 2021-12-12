@@ -442,7 +442,7 @@ void makeFile(char ***parsedCommandPtr)
                 {
                     compressValue(&dataPointerBlock,  2 + inodeIndex, j * 4);
                     char data[BLOCK_SIZE] = {0};
-                    memcpy(&directoryBlock, directoryInode, BLOCK_SIZE);
+                    memcpy(&data, dataPointerBlock, BLOCK_SIZE);
                     freePosition = true;
                     diskWrite(dataBlockIndex, data);
                     break;
