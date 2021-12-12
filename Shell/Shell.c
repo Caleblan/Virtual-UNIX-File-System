@@ -482,7 +482,7 @@ void makeFile(char ***parsedCommandPtr)
                     char data[BLOCK_SIZE] = {0};
                     memcpy(&data, dataPointerBlock, BLOCK_SIZE);
                     freePosition = true;
-                    diskWrite(dataBlockIndex, data);
+                    diskWrite(pointer, data);
                     break;
                 }
             }
