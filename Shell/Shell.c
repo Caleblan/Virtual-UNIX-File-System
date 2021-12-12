@@ -432,7 +432,7 @@ void makeFile(char ***parsedCommandPtr)
         //If there are pointers
         else if (pointer == 0)
         {
-            compressValue(&directoryInode, inodeIndex, i * 4);
+            compressValue(&directoryInode, 3 + inodeIndex, i * 4);
             break;
         }
     }
